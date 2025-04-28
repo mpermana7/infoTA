@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Profile - Brand</title>
+    <title>InfoTA - Profil</title>
     <link rel="stylesheet" href="{{ asset('/storage/assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
@@ -89,46 +89,66 @@
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="badge bg-danger badge-counter">3+</span>
+                                        @php
+                                            $unreadCount = auth()->guard('admin')->user()->unreadNotifications->count();
+                                        @endphp
+                                        @if ($unreadCount > 0)
+                                            <span class="badge bg-danger badge-counter">{{ $unreadCount }}</span>
+                                        @endif
                                         <i class="fas fa-bell fa-fw"></i>
                                     </a>
-
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">alerts center</h6>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-primary icon-circle">
-                                                    <i class="fas fa-file-alt text-white"></i>
+                                        <h6 class="dropdown-header bg-danger border-danger">Notifikasi</h6>
+                                        @forelse (auth()->guard('admin')->user()->notifications as $notification)
+                                            @if (is_null($notification->read_at))
+                                                <form id="formNotification-{{  $notification->id }}" action="/notification/{{ $notification->id }}/read" method="post">
+                                                <div class="dropdown-item d-flex align-items-center" style="background-color: rgba(247, 162, 162, 0.1); cursor: pointer;" onclick="document.getElementById('formNotification-{{ $notification->id }}').submit()">
+                                                @csrf
+                                                @method('POST')
+                                                <div class="me-3">
+                                                    <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                        <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 12, 2019</span>
-                                                <p>A new monthly report is ready to download!</p>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-success icon-circle">
-                                                    <i class="fas fa-donate text-white"></i>
+                                                <div>
+                                                    <span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p class="fw-bold">{{ $notification->data['message'] }}</p>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 7, 2019</span>
-                                                <p>$290.29 has been deposited into your account!</p>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-warning icon-circle">
-                                                    <i class="fas fa-exclamation-triangle text-white"></i>
                                                 </div>
+                                                </form>
+                                            @else
+                                                <div class="dropdown-item d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                            <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                        </div>
+                                                    </div>
+                                                <div><span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p>{{ $notification->data['message'] }}</p>
+                                                </div>
+                                                </div>
+                                            @endif
+                                        @empty
+                                        <div class="dropdown-item align-items-center" href="#">
+                                            <div class="text-center">
+                                                <p class="p-2 pt-4 fw-bold text-center h6">Notifikasi Tidak Ada</p>
                                             </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 2, 2019</span>
-                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                        </div>    
+                                        @endforelse
+                                        <div class="row dropdown-footer">
+                                            <div class="col pe-1">
+                                                <form action="{{ route('admin.notifications.read') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Sudah Dibaca</button>
+                                                </form>
                                             </div>
-                                        </a>
-                                        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                            <div class="col ps-1">
+                                                <form action="{{ route('admin.notifications.drop') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Bersihkan Semua</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -136,9 +156,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span>
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('admin')->user()->nama_pengguna }}</span>
                                         <span class="badge rounded-pill me-2" style="background: #881d1d;">Admin</span>
-                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/avatar1.jpeg') }}"></a>
+                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->image ?? 'default.jpg')) }}"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <a class="dropdown-item" href="/admin/profil">
                                             <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profil
@@ -159,12 +179,21 @@
                         <div class="col-lg-4">
                             <div class="card mb-3">
                                 <div class="card-body text-center shadow">
-                                    <img class="rounded-circle mb-3 mt-4" src="{{ asset('/storage/assets/img/dogs/image2.jpeg') }}" width="160" height="160">
+                                    <img class="rounded-circle mb-3 mt-4" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->image ?? 'default.jpg')) }}" width="160" height="160">
                                     <div class="mb-3">
-                                        <input class="form-control-sm form-control" type="file" name="foto" accept="image/*" required="">
-                                        <button class="btn btn-sm link-light mt-2" type="button" style="background: #881d1d;">
+                                        <form action="{{ route('admin.editFoto', Auth::guard('admin')->user()->id) }}" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                        <input class="form-control-sm form-control @error('image') is-invalid @enderror" type="file" name="image" accept="image/*" required="">
+                                        {{-- Pesan Error Untuk Image --}}
+                                        @error('image')
+                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                            <br>
+                                        @enderror
+
+                                        <button class="btn btn-sm link-light mt-2" type="submit" style="background: #881d1d;">
                                             <i class="fa fa-upload"></i>&nbsp;Unggah
                                         </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -177,14 +206,15 @@
                                             <p class="text-dark m-0 fw-bold">Ganti Kata Sandi</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
+                                            <form action="{{ route('admin.gantiKataSandi', Auth::guard('admin')->user()->id) }}" method="POST" enctype="multipart/form-data">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col">
                                                         <div class="mb-3">
                                                             <label class="form-label" for="username">
                                                                 <strong>Nama Pengguna</strong>
                                                             </label>
-                                                            <input class="form-control" type="text" id="username" placeholder="Nama Pengguna" name="nama_pengguna" required="">
+                                                            <input class="form-control" type="text" placeholder="Nama Pengguna" value="{{ Auth::guard('admin')->user()->nama_pengguna }}" disabled>
                                                         </div>
                                                     </div>
                                                     <div class="col">
@@ -192,7 +222,12 @@
                                                             <label class="form-label" for="email">
                                                                 <strong>Kata Sandi Lama</strong>
                                                             </label>
-                                                            <input class="form-control" type="password" name="kata_sandi" placeholder="Kata Sandi Lama" required="" minlength="8">
+                                                            <input class="form-control @error('kata_sandi_lama') is-invalid @enderror" type="password" name="kata_sandi_lama" placeholder="Kata Sandi Lama">
+                                                            {{-- Pesan Error Untuk Kata Sandi Lama --}}
+                                                            @error('kata_sandi_lama')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -202,7 +237,12 @@
                                                             <label class="form-label" for="first_name">
                                                                 <strong>Kata Sandi Baru</strong>
                                                             </label>
-                                                            <input class="form-control" type="password" name="kata_sandi_baru" placeholder="Kata Sandi Baru" required="" minlength="8">
+                                                            <input class="form-control @error('kata_sandi_baru') is-invalid @enderror" type="password" name="kata_sandi_baru" placeholder="Kata Sandi Baru">
+                                                            {{-- Pesan Error Untuk Kata Sandi Baru --}}
+                                                            @error('kata_sandi_baru')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                     <div class="col">
@@ -210,7 +250,12 @@
                                                             <label class="form-label" for="first_name">
                                                                 <strong>Konfirmasi Kata Sandi</strong>
                                                             </label>
-                                                            <input class="form-control" type="password" name="konfirmasi_kata_sandi" placeholder="Konfirmasi Kata Sandi" required="" minlength="8">
+                                                            <input class="form-control @error('konfirmasi_kata_sandi') is-invalid @enderror" type="password" name="konfirmasi_kata_sandi" placeholder="Konfirmasi Kata Sandi">
+                                                            {{-- Pesan Error Untuk Konfirmasi Kata Sandi --}}
+                                                            @error('konfirmasi_kata_sandi')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
                                                         </div>
                                                     </div>
                                                 </div>
@@ -237,6 +282,29 @@
     </div>
     <script src="{{ asset('/storage/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/storage/assets/js/theme.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script>
+        //message with sweetalert
+        @if(session('success'))
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @elseif (session('error'))
+            Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+        </script>
 </body>
-
 </html>

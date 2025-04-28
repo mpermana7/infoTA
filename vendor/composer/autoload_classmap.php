@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controllers\\AdminController' => $baseDir . '/app/Http/Controllers/AdminController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\LoginController' => $baseDir . '/app/Http/Controllers/LoginController.php',
     'App\\Http\\Controllers\\PageController' => $baseDir . '/app/Http/Controllers/PageController.php',
@@ -13,7 +14,10 @@ return array(
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\Dosen' => $baseDir . '/app/Models/Dosen.php',
     'App\\Models\\Mahasiswa' => $baseDir . '/app/Models/Mahasiswa.php',
+    'App\\Models\\Notifikasi' => $baseDir . '/app/Models/Notifikasi.php',
+    'App\\Models\\Template' => $baseDir . '/app/Models/Template.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Notifications\\PenambahanTemplateDokumen' => $baseDir . '/app/Notifications/PenambahanTemplateDokumen.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',
@@ -1113,6 +1117,7 @@ return array(
     'Illuminate\\Cache\\DynamoDbLock' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/DynamoDbLock.php',
     'Illuminate\\Cache\\DynamoDbStore' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/DynamoDbStore.php',
     'Illuminate\\Cache\\Events\\CacheEvent' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/Events/CacheEvent.php',
+    'Illuminate\\Cache\\Events\\CacheFlushFailed' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/Events/CacheFlushFailed.php',
     'Illuminate\\Cache\\Events\\CacheFlushed' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/Events/CacheFlushed.php',
     'Illuminate\\Cache\\Events\\CacheFlushing' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/Events/CacheFlushing.php',
     'Illuminate\\Cache\\Events\\CacheHit' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/Events/CacheHit.php',
@@ -1134,6 +1139,7 @@ return array(
     'Illuminate\\Cache\\MemcachedConnector' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/MemcachedConnector.php',
     'Illuminate\\Cache\\MemcachedLock' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/MemcachedLock.php',
     'Illuminate\\Cache\\MemcachedStore' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/MemcachedStore.php',
+    'Illuminate\\Cache\\MemoizedStore' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/MemoizedStore.php',
     'Illuminate\\Cache\\NoLock' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/NoLock.php',
     'Illuminate\\Cache\\NullStore' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/NullStore.php',
     'Illuminate\\Cache\\PhpRedisLock' => $vendorDir . '/laravel/framework/src/Illuminate/Cache/PhpRedisLock.php',
@@ -1228,6 +1234,7 @@ return array(
     'Illuminate\\Console\\View\\Components\\Task' => $vendorDir . '/laravel/framework/src/Illuminate/Console/View/Components/Task.php',
     'Illuminate\\Console\\View\\Components\\TwoColumnDetail' => $vendorDir . '/laravel/framework/src/Illuminate/Console/View/Components/TwoColumnDetail.php',
     'Illuminate\\Console\\View\\Components\\Warn' => $vendorDir . '/laravel/framework/src/Illuminate/Console/View/Components/Warn.php',
+    'Illuminate\\Console\\View\\TaskResult' => $vendorDir . '/laravel/framework/src/Illuminate/Console/View/TaskResult.php',
     'Illuminate\\Container\\Attributes\\Auth' => $vendorDir . '/laravel/framework/src/Illuminate/Container/Attributes/Auth.php',
     'Illuminate\\Container\\Attributes\\Authenticated' => $vendorDir . '/laravel/framework/src/Illuminate/Container/Attributes/Authenticated.php',
     'Illuminate\\Container\\Attributes\\Cache' => $vendorDir . '/laravel/framework/src/Illuminate/Container/Attributes/Cache.php',

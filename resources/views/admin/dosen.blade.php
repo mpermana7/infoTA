@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Dashboard - Brand</title>
+    <title>InfoTA - Dosen</title>
     <link rel="stylesheet" href="{{ asset('/storage/assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome5-overrides.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
 </head>
 
 <body id="page-top">
@@ -88,45 +89,66 @@
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="badge bg-danger badge-counter">3+</span>
+                                        @php
+                                            $unreadCount = auth()->guard('admin')->user()->unreadNotifications->count();
+                                        @endphp
+                                        @if ($unreadCount > 0)
+                                            <span class="badge bg-danger badge-counter">{{ $unreadCount }}</span>
+                                        @endif
                                         <i class="fas fa-bell fa-fw"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">alerts center</h6>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-primary icon-circle">
-                                                    <i class="fas fa-file-alt text-white"></i>
+                                        <h6 class="dropdown-header bg-danger border-danger">Notifikasi</h6>
+                                        @forelse (auth()->guard('admin')->user()->notifications as $notification)
+                                            @if (is_null($notification->read_at))
+                                                <form id="formNotification-{{  $notification->id }}" action="/notification/{{ $notification->id }}/read" method="post">
+                                                <div class="dropdown-item d-flex align-items-center" style="background-color: rgba(247, 162, 162, 0.1); cursor: pointer;" onclick="document.getElementById('formNotification-{{ $notification->id }}').submit()">
+                                                @csrf
+                                                @method('POST')
+                                                <div class="me-3">
+                                                    <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                        <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 12, 2019</span>
-                                                <p>A new monthly report is ready to download!</p>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-success icon-circle">
-                                                    <i class="fas fa-donate text-white"></i>
+                                                <div>
+                                                    <span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p class="fw-bold">{{ $notification->data['message'] }}</p>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 7, 2019</span>
-                                                <p>$290.29 has been deposited into your account!</p>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-warning icon-circle">
-                                                    <i class="fas fa-exclamation-triangle text-white"></i>
                                                 </div>
+                                                </form>
+                                            @else
+                                                <div class="dropdown-item d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                            <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                        </div>
+                                                    </div>
+                                                <div><span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p>{{ $notification->data['message'] }}</p>
+                                                </div>
+                                                </div>
+                                            @endif
+                                        @empty
+                                        <div class="dropdown-item align-items-center" href="#">
+                                            <div class="text-center">
+                                                <p class="p-2 pt-4 fw-bold text-center h6">Notifikasi Tidak Ada</p>
                                             </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 2, 2019</span>
-                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                        </div>    
+                                        @endforelse
+                                        <div class="row dropdown-footer">
+                                            <div class="col pe-1">
+                                                <form action="{{ route('admin.notifications.read') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Sudah Dibaca</button>
+                                                </form>
                                             </div>
-                                        </a>
-                                        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                            <div class="col ps-1">
+                                                <form action="{{ route('admin.notifications.drop') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Bersihkan Semua</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -134,9 +156,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span>
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('admin')->user()->nama_pengguna }}</span>
                                         <span class="badge rounded-pill me-2" style="background: #881d1d;">Admin</span>
-                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/avatar1.jpeg') }}">
+                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->foto ?? 'default.jpg')) }}">
                                     </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <a class="dropdown-item" href="/admin/profil">
@@ -165,28 +187,68 @@
                             <div class="modal fade" role="dialog" tabindex="-1" id="ModalTambahDosenPembimbing">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <form method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('dosen.tambah') }}" method="post" enctype="multipart/form-data">
+                                            @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title text-dark" style="color: var(--bs-emphasis-color);font-weight: bold;">Tambah Dosen Pembimbing</h5>
                                                 <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <label class="form-label text-dark" style="font-weight: bold;">Foto :</label>
-                                                <input class="form-control form-control-sm" type="file" name="foto" required="" accept="image/*">
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">NIP :</label>
-                                                <input class="form-control form-control-sm" type="number" name="nip" min="0" placeholder="Nomor Induk Pegawai" required="">
+                                                <input class="form-control form-control-sm @error('nip') is-invalid @enderror" type="number" name="nip" placeholder="Nomor Induk Pegawai">
+                                                {{-- Pesan Error Untuk NIP --}}
+                                                @error('nip')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
+
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">Kode Dosen :</label>
-                                                <input class="form-control form-control-sm" type="text" name="kode_dosen" placeholder="Kode Dosen" required="">
+                                                <input class="form-control form-control-sm @error('kode_dosen') is-invalid @enderror" type="text" name="kode_dosen" placeholder="Kode Dosen">
+                                                {{-- Pesan Error Untuk Kode Dosen --}}
+                                                @error('kode_dosen')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
+
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">Nama :</label>
-                                                <input class="form-control form-control-sm" type="text" name="nama" placeholder="Nama" required="">
+                                                <input class="form-control form-control-sm @error('nama') is-invalid @enderror" type="text" name="nama" placeholder="Nama">
+                                                {{-- Pesan Error Untuk Nama --}}
+                                                @error('nama')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
+
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">Email :</label>
-                                                <input class="form-control" type="email" name="email" placeholder="Email" required="">
+                                                <input class="form-control form-control-sm @error('email') is-invalid @enderror" type="email" name="email" placeholder="Email">
+                                                {{-- Pesan Error Untuk Email --}}
+                                                @error('email')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
+
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">No HP :</label>
-                                                <input class="form-control form-control-sm" type="text" name="no_hp" placeholder="No Handphone" required="">
+                                                <input class="form-control form-control-sm @error('no_hp') is-invalid @enderror" type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" name="no_hp" placeholder="Ex: 081XXXXXX">
+                                                {{-- Pesan Error Untuk No Handphone --}}
+                                                @error('no_hp')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
+
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">Nama Pengguna :</label>
-                                                <input class="form-control form-control-sm" type="text" name="nama_pengguna" placeholder="Nama Pengguna" required="">
+                                                <input class="form-control form-control-sm @error('nama_pengguna') is-invalid @enderror" type="text" name="nama_pengguna" placeholder="Nama Pengguna">
+                                                {{-- Pesan Untuk Nama Pengguna --}}
+                                                @error('nama_pengguna')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
+
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">Kata Sandi :</label>
-                                                <input class="form-control form-control-sm" type="password" name="kata_sandi" placeholder="Kata Sandi" required="" minlength="8">
+                                                <input class="form-control form-control-sm @error('kata_sandi') is-invalid @enderror" type="password" name="kata_sandi" placeholder="Kata Sandi">
+                                                {{-- Pesan Untuk Kata Sandi --}}
+                                                @error('kata_sandi')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                    <br>
+                                                @enderror
                                             </div>
 
                                             <div class="modal-footer">
@@ -204,68 +266,103 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
+                                <table class="table my-0" id="tableData">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>Foto</th>
-                                            <th>NIP</th>
-                                            <th>Kode Dosen</th>
-                                            <th>Nama</th>
-                                            <th>Email</th>
-                                            <th>No HP</th>
-                                            <th>Username</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">Foto</th> class="text-center"
+                                            <th class="text-center">NIP</th>
+                                            <th class="text-center">Kode Dosen</th>
+                                            <th class="text-center">Nama</th>
+                                            <th class="text-center">Email</th>
+                                            <th class="text-center">No Handphone</th>
+                                            <th class="text-center">Nama Pengguna</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($menampilkanDataDosen as $data)
                                         <tr>
-                                            <td>1</td>
-                                            <td><img class="rounded-circle img-fluid" src="{{ asset('/storage/assets/img/avatars/avatar3.jpeg') }}" width="60px"></td>
-                                            <td>34765123</td>
-                                            <td>STY</td>
-                                            <td>Shin Tae-yong</td>
-                                            <td>shintaeyong@dosen.telkomuniversity.ac.id</td>
-                                            <td>0812342xxx</td>
-                                            <td>shin77</td>
+                                            <td class="text-center">{{ $loop->iteration }}</td>
+                                            <td class="text-center"><img class="rounded-circle img-fluid" src="{{ asset('/storage/assets/img/avatars/'.($data->foto ?? 'default.jpg'))}}" width="60px"></td>
+                                            <td class="text-center">{{$data->nip}}</td>
+                                            <td class="text-center">{{$data->kode_dosen}}</td>
+                                            <td class="text-center">{{$data->nama}}</td>
+                                            <td class="text-center">{{$data->email}}</td>
+                                            <td class="text-center">{{$data->no_hp}}</td>
+                                            <td class="text-center">{{$data->nama_pengguna}}</td>
                                             <td>
-                                                <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditDosenPembimbing">
+                                                <p class="text-center">
+                                                <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditDosenPembimbing{{$data->id}}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-danger btn-sm ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalHapusDosenPembimbing">
+                                                <button class="btn btn-danger btn-sm ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalHapusDosenPembimbing{{$data->id}}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
-                                                <button class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalLihatDosenPembimbing">
+                                                <button class="btn btn-info btn-sm me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalLihatDosenPembimbing{{$data->id}}">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
+                                                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalGantiKataSandi{{$data->id}}">
+                                                    <i class="fas fa-key"></i>
+                                                </button>
+                                                </p>
 
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditDosenPembimbing">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditDosenPembimbing{{$data->id}}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
-                                                            <form method="post" enctype="multipart/form-data">
+                                                            <form method="post" action="{{ route('dosen.edit', $data->id) }}" enctype="multipart/form-data">
+                                                                @csrf
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" style="font-weight: bold;">Edit Dosen Pembimbing</h5>
                                                                     <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <p class="text-center">
-                                                                        <img class="rounded-circle img-fluid" src="{{ asset('/storage/assets/img/avatars/avatar3.jpeg') }}" width="120px"></p>
-                                                                        <label class="form-label text-dark" style="font-weight: bold;">Foto :</label>
-                                                                        <input class="form-control form-control-sm" type="file" name="foto" required="" accept="image/*">
-                                                                        <label class="form-label text-dark mt-3" style="font-weight: bold;">NIP :</label>
-                                                                        <input class="form-control form-control-sm" type="number" name="nip" min="0" placeholder="Nomor Induk Pegawai" required="">
+                                                                        <label class="form-label text-dark" style="font-weight: bold;">NIP :</label>
+                                                                        <input class="form-control form-control-sm @error('nip'.$data->id) is-invalid @enderror" type="number" name="nip_{{$data->id}}" value="{{ old('nip', $data->nip) }}" placeholder="Nomor Induk Pegawai">
+                                                                        {{-- Pesan Error Untuk NIP --}}
+                                                                        @error('nip_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+
                                                                         <label class="form-label text-dark mt-3" style="font-weight: bold;">Kode Dosen :</label>
-                                                                        <input class="form-control form-control-sm" type="text" name="kode_dosen" placeholder="Kode Dosen" required="">
+                                                                        <input class="form-control form-control-sm @error('kode_dosen_'.$data->id) is-invalid @enderror" type="text" name="kode_dosen_{{$data->id}}" value="{{ old('kode_dosen', $data->kode_dosen) }}" placeholder="Kode Dosen">
+                                                                        {{-- Pesan Error Untuk Kode Dosen --}}
+                                                                        @error('kode_dosen_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+
                                                                         <label class="form-label text-dark mt-3" style="font-weight: bold;">Nama :</label>
-                                                                        <input class="form-control form-control-sm" type="text" name="nama" placeholder="Nama" required="">
+                                                                        <input class="form-control form-control-sm @error('nama_'.$data->id) is-invalid @enderror" type="text" value="{{ old('nama', $data->nama) }}" name="nama_{{$data->id}}" placeholder="Nama">
+                                                                        @error('nama_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+
                                                                         <label class="form-label text-dark mt-3" style="font-weight: bold;">Email :</label>
-                                                                        <input class="form-control" type="email" name="email" placeholder="Email" required="">
+                                                                        <input class="form-control @error('email_'.$data->id) is-invalid @enderror" type="email" value="{{ old('email', $data->email ) }}" name="email_{{$data->id}}" placeholder="Email">
+                                                                        {{-- Pesan Error Untuk Email --}}
+                                                                        @error('email_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+
                                                                         <label class="form-label text-dark mt-3" style="font-weight: bold;">No HP :</label>
-                                                                        <input class="form-control form-control-sm" type="text" name="no_hp" placeholder="No Handphone" required="">
+                                                                        <input class="form-control form-control-sm @error('no_hp_'.$data->id) is-invalid @enderror" type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="{{ old('no_hp', $data->no_hp) }}" name="no_hp_{{$data->id}}" placeholder="No Handphone">
+                                                                        {{-- Pesan Error Untuk No Handphone --}}
+                                                                        @error('no_hp_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+
                                                                         <label class="form-label text-dark mt-3" style="font-weight: bold;">Nama Pengguna :</label>
-                                                                        <input class="form-control form-control-sm" type="text" name="nama_pengguna" placeholder="Nama Pengguna" required="">
-                                                                        <label class="form-label text-dark mt-3" style="font-weight: bold;">Kata Sandi :</label>
-                                                                        <input class="form-control form-control-sm" type="password" name="kata_sandi" placeholder="Kata Sandi" required="" minlength="8">
+                                                                        <input class="form-control form-control-sm @error('nama_pengguna_'.$data->id) is-invalid @enderror" type="text" name="nama_pengguna_{{$data->id}}" value="{{ old('nama_pengguna', $data->nama_pengguna) }}" placeholder="Nama Pengguna">
+                                                                        {{-- Pesan Error Untuk Nama Pengguna --}}
+                                                                        @error('nama_pengguna_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button class="btn btn-secondary btn-sm" type="reset">
@@ -279,7 +376,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalHapusDosenPembimbing">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalHapusDosenPembimbing{{$data->id}}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -294,14 +391,14 @@
                                                                 <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">
                                                                     <i class="fa fa-close"></i>&nbsp;Tidak
                                                                 </button>
-                                                                <button class="btn btn-danger btn-sm" type="button">
+                                                                <a href="{{ route('dosen.hapus', $data->id) }}" class="btn btn-danger btn-sm" type="button">
                                                                     <i class="far fa-trash-alt"></i>&nbsp;Ya, Hapus
-                                                                </button>
+                                                                </a>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalLihatDosenPembimbing">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalLihatDosenPembimbing{{$data->id}}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -310,25 +407,25 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <h1 class="display-3 text-center">
-                                                                    <img class="rounded-circle img-fluid" src="{{ asset('/storage/assets/img/avatars/avatar3.jpeg') }}" width="120px"></h1>
+                                                                    <img class="rounded-circle img-fluid" src="{{ asset('/storage/assets/img/avatars/'.($data->foto ?? 'default.jpg')) }}" width="120px"></h1>
                                                                 <h5 class="mt-4" style="font-weight: bold;">Biodata</h5>
                                                                 <div class="row">
                                                                     <div class="col-4"><span style="font-weight: bold;">NIP :</span>
-                                                                        <p>12378123</p>
+                                                                        <p>{{$data->nip}}</p>
                                                                     </div>
                                                                     <div class="col-4"><span style="font-weight: bold;">Kode Dosen :</span>
-                                                                        <p>STY</p>
+                                                                        <p>{{$data->kode_dosen}}</p>
                                                                     </div>
                                                                     <div class="col-4"><span style="font-weight: bold;">Nama :</span>
-                                                                        <p>Shin Tae-yong</p>
+                                                                        <p>{{$data->nama}}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-9"><span style="font-weight: bold;">Email :</span>
-                                                                        <p>shintaeyong@dosen.telkomuniversity.ac.id</p>
+                                                                    <div class="col-8"><span style="font-weight: bold;">Email :</span>
+                                                                        <p class="text-truncate">{{$data->email}}</p>
                                                                     </div>
-                                                                    <div class="col-3"><span style="font-weight: bold;">No HP :</span>
-                                                                        <p>0812342xxx</p>
+                                                                    <div class="col-4"><span style="font-weight: bold;">No HP :</span>
+                                                                        <p class="text-truncate">{{$data->no_hp}}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row justify-content-center">
@@ -339,10 +436,10 @@
                                                                 <h5 class="mt-4" style="font-weight: bold;">Akun</h5>
                                                                 <div class="row">
                                                                     <div class="col-6"><span style="font-weight: bold;">Nama Pengguna :</span>
-                                                                        <p>shin77</p>
+                                                                        <p>{{$data->nama_pengguna}}</p>
                                                                     </div>
                                                                     <div class="col-6"><span style="font-weight: bold;">Kata Sandi :</span>
-                                                                        <p>************</p>
+                                                                        <p>{{ str_repeat('*', 8) }}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -354,20 +451,59 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalGantiKataSandi{{$data->id}}">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <form method="post" action="{{ route('dosen.GantiKataSandi', $data->id) }}" enctype="multipart/form-data">
+                                                                @csrf
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" style="font-weight: bold;">Ganti Kata Sandi</h5>
+                                                                    <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                        <label class="form-label text-dark" style="font-weight: bold;">Kata Sandi Baru :</label>
+                                                                        <input class="form-control form-control-sm @error('kata_sandi_baru_'.$data->id) is-invalid @enderror" type="password" name="kata_sandi_baru_{{$data->id}}" placeholder="Kata Sandi Baru">
+                                                                        {{-- Pesan Error Untuk NIP --}}
+                                                                        @error('kata_sandi_baru_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+
+                                                                        <label class="form-label text-dark mt-3" style="font-weight: bold;">Konfirmasi Kata Sandi :</label>
+                                                                        <input class="form-control form-control-sm @error('konfirmasi_kata_sandi_'.$data->id) is-invalid @enderror" type="password" name="konfirmasi_kata_sandi_{{$data->id}}" placeholder="Konfirmasi Kata Sandi">
+                                                                        {{-- Pesan Error Untuk Kode Dosen --}}
+                                                                        @error('konfirmasi_kata_sandi_'.$data->id)
+                                                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                            <br>
+                                                                        @enderror
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-secondary btn-sm" type="reset">
+                                                                        <i class="fa fa-refresh"></i>&nbsp;Bersihkan
+                                                                    </button>
+                                                                    <button class="btn btn-warning btn-sm" type="submit" style="font-weight: bold;">
+                                                                        <i class="fa fa-save"></i>&nbsp;Perbarui
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
-                                        </tr>
+                                        </tr>                                       
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td><strong>No</strong></td>
-                                            <td><strong>Foto</strong></td>
-                                            <td><strong>NIP</strong></td>
-                                            <td><strong>Kode Dosen</strong></td>
-                                            <td><strong>Nama</strong></td>
-                                            <td><strong>Email</strong></td>
-                                            <td><strong>No HP</strong></td>
-                                            <td><strong>Username</strong></td>
-                                            <td><strong>Aksi</strong></td>
+                                            <td class="text-center"><strong>No</strong></td>
+                                            <td class="text-center"><strong>Foto</strong></td>
+                                            <td class="text-center"><strong>NIP</strong></td>
+                                            <td class="text-center"><strong>Kode Dosen</strong></td>
+                                            <td class="text-center"><strong>Nama</strong></td>
+                                            <td class="text-center"><strong>Email</strong></td>
+                                            <td class="text-center"><strong>No Handphone</strong></td>
+                                            <td class="text-center"><strong>Nama Pengguna</strong></td>
+                                            <td class="text-center"><strong>Aksi</strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -385,5 +521,57 @@
     </div>
     <script src="{{ asset('/storage/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/storage/assets/js/theme.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script>
+        //message with sweetalert
+        @if(session('success'))
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @elseif (session('error'))
+            Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+        // Tooltips (inisialisasi untuk semua .tooltip-btn)
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('.tooltip-btn'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Datatables
+        $(document).ready( function () {
+            $('#tableData').DataTable({
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri per halaman",
+                    search: "Cari:",
+                    info: "Menampilkan _START_ Sampai _END_ Dari _TOTAL_ Entri",
+                    infoEmpty: "Menampilkan 0 Sampai 0 Dari 0 Entri",
+                    emptyTable: "Tidak Ada Data Tersedia",
+                    zeroRecords: "Tidak Ditemukan Hasil",
+                },
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
+                columnDefs: [{
+                    targets: 8,
+                    searchable: false,
+                    orderable: false,
+                },{
+                    targets: 0,
+                    searchable: false,
+                }]
+            });
+        });
+    </script>
 </body>
 </html>

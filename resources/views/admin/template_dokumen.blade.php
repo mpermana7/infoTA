@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Dashboard - Brand</title>
+    <title>InfoTA - Template Dokumen</title>
     <link rel="stylesheet" href="{{ asset('/storage/assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome5-overrides.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
 </head>
 
 <body id="page-top">
@@ -90,38 +91,66 @@
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="badge bg-danger badge-counter">3+</span>
+                                        @php
+                                            $unreadCount = auth()->guard('admin')->user()->unreadNotifications->count();
+                                        @endphp
+                                        @if ($unreadCount > 0)
+                                            <span class="badge bg-danger badge-counter">{{ $unreadCount }}</span>
+                                        @endif
                                         <i class="fas fa-bell fa-fw"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">alerts center</h6>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-primary icon-circle">
-                                                    <i class="fas fa-file-alt text-white"></i>
+                                        <h6 class="dropdown-header bg-danger border-danger">Notifikasi</h6>
+                                        @forelse (auth()->guard('admin')->user()->notifications as $notification)
+                                            @if (is_null($notification->read_at))
+                                                <form id="formNotification-{{  $notification->id }}" action="/notification/{{ $notification->id }}/read" method="post">
+                                                <div class="dropdown-item d-flex align-items-center" style="background-color: rgba(247, 162, 162, 0.1); cursor: pointer;" onclick="document.getElementById('formNotification-{{ $notification->id }}').submit()">
+                                                @csrf
+                                                @method('POST')
+                                                <div class="me-3">
+                                                    <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                        <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <span class="small text-gray-500">December 12, 2019</span>
-                                                <p>A new monthly report is ready to download!</p>
-                                            </div>
-                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i>
+                                                <div>
+                                                    <span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p class="fw-bold">{{ $notification->data['message'] }}</p>
                                                 </div>
-                                            </div>
-                                            <div><span class="small text-gray-500">December 7, 2019</span>
-                                                <p>$290.29 has been deposited into your account!</p>
-                                            </div>
-                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i>
                                                 </div>
+                                                </form>
+                                            @else
+                                                <div class="dropdown-item d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                            <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                        </div>
+                                                    </div>
+                                                <div><span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p>{{ $notification->data['message'] }}</p>
+                                                </div>
+                                                </div>
+                                            @endif
+                                        @empty
+                                        <div class="dropdown-item align-items-center" href="#">
+                                            <div class="text-center">
+                                                <p class="p-2 pt-4 fw-bold text-center h6">Notifikasi Tidak Ada</p>
                                             </div>
-                                            <div><span class="small text-gray-500">December 2, 2019</span>
-                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                        </div>    
+                                        @endforelse
+                                        <div class="row dropdown-footer">
+                                            <div class="col pe-1">
+                                                <form action="{{ route('admin.notifications.read') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Sudah Dibaca</button>
+                                                </form>
                                             </div>
-                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                            <div class="col ps-1">
+                                                <form action="{{ route('admin.notifications.drop') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Bersihkan Semua</button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -129,9 +158,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span>
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('admin')->user()->nama_pengguna }}</span>
                                         <span class="badge rounded-pill me-2" style="background: #881d1d;">Admin</span>
-                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/avatar1.jpeg') }}">
+                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->foto ?? 'default.jpg')) }}">
                                     </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                                         <a class="dropdown-item" href="/admin/profil">
@@ -160,14 +189,21 @@
                             <div class="modal fade" role="dialog" tabindex="-1" id="ModalTambahTemplate">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <form method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('template.tambah') }}" method="post" enctype="multipart/form-data">
+                                            @csrf
                                             <div class="modal-header">
                                                 <h5 class="modal-title text-dark" style="color: var(--bs-emphasis-color);font-weight: bold;">Tambah Template Dokumen</h5>
                                                 <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <label class="form-label text-dark" style="font-weight: bold;">File Template Dokumen :</label>
-                                                <input class="form-control form-control-sm" type="file" name="tamplate_dokumen" required=""></div>
+                                                <input class="form-control form-control-sm @error('template_dokumen') is-invalid @enderror" type="file" name="template_dokumen" accept=".docx">
+
+                                                {{-- Pesan Error Untuk Template Dokumen --}}
+                                                @error('template_dokumen')
+                                                    <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                @enderror
+                                            </div>
                                             <div class="modal-footer">
                                                 <button class="btn btn-secondary btn-sm" type="reset">
                                                     <i class="fa fa-refresh"></i>&nbsp;Bersihkan
@@ -183,40 +219,48 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="dataTable">
+                                <table class="table table-striped table-hover" id="tableData">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>File</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">File</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>CD1_template.docx</td>
+                                        @foreach ($menampilkanDataTemplateDokumen as $data)
+                                            <tr>
+                                            <td class="text-center">{{ $loop->iteration }}</td>
+                                            <td class="text-center">{{ $data->template_dokumen }}</td>
                                             <td>
-                                                <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditTemplate">
+                                                <p class="text-center">
+                                                <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditTemplate{{ $data->id }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-danger btn-sm ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalHapusTemplate">
+                                                <button class="btn btn-danger btn-sm ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalHapusTemplate{{ $data->id }}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
-                                                <button class="btn btn-info btn-sm" type="button">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
+                                                <a href="{{ url('/download/' . $data->template_dokumen) }}" class="btn btn-info btn-sm tooltip-btn" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Unduh File Template Dokumen">
+                                                    <i class="fas fa-file-download"></i>
+                                                </a>
+                                                </p>
 
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditTemplate">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditTemplate{{ $data->id }}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
-                                                            <form method="post" enctype="multipart/form-data">
+                                                            <form method="post" action="{{ route('template.edit', $data->id) }}" enctype="multipart/form-data">
+                                                                @csrf
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title" style="font-weight: bold;">Edit Template Dokumen</h5>
                                                                     <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <label class="form-label" style="font-weight: bold;">File Template Dokumen :</label>
-                                                                    <input class="form-control form-control-sm form-control" type="file" name="template_dokumen" required="">
+                                                                    <input class="form-control form-control-sm form-control @error('template_dokumen_'.$data->id) is-invalid @enderror" type="file" name="template_dokumen_{{ $data->id }}">
+                                                                    {{-- Pesan Error Untuk Template Dokumen --}}
+                                                                    @error('template_dokumen_'.$data->id)
+                                                                        <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                    @enderror
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button class="btn btn-secondary btn-sm" type="reset">
@@ -229,7 +273,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalHapusTemplate">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalHapusTemplate{{ $data->id }}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -239,18 +283,26 @@
                                                                 <h1 class="display-3"><i class="fas fa-exclamation-triangle"></i></h1>
                                                                 <h6>Apakah anda yakin ingin menghapusnya?</h6>
                                                             </div>
-                                                            <div class="modal-footer"><button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Tidak</button><button class="btn btn-danger btn-sm" type="button"><i class="far fa-trash-alt"></i>&nbsp;Ya, Hapus</button></div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">
+                                                                    <i class="fa fa-close"></i>&nbsp;Tidak
+                                                                </button>
+                                                                <a href="{{ route('template.hapus', $data->id) }}" class="btn btn-danger btn-sm">
+                                                                    <i class="far fa-trash-alt"></i>&nbsp;Ya, Hapus
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
-                                        </tr>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td><strong>No</strong></td>
-                                            <td><strong>File</strong></td>
-                                            <td><strong>Aksi</strong></td>
+                                            <td class="text-center"><strong>No</strong></td>
+                                            <td class="text-center"><strong>File</strong></td>
+                                            <td class="text-center"><strong>Aksi</strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -268,6 +320,60 @@
     </div>
     <script src="{{ asset('/storage/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/storage/assets/js/theme.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script>
+    </script>
+    <script>
+        //message with sweetalert
+        @if(session('success'))
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @elseif (session('error'))
+            Swal.fire({
+                icon: "error",
+                title: "GAGAL!",
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+        // Tooltips (inisialisasi untuk semua .tooltip-btn)
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('.tooltip-btn'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Datatables
+        $(document).ready( function () {
+            $('#tableData').DataTable({
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri per halaman",
+                    search: "Cari:",
+                    info: "Menampilkan _START_ Sampai _END_ Dari _TOTAL_ Entri",
+                    infoEmpty: "Menampilkan 0 Sampai 0 Dari 0 Entri",
+                    emptyTable: "Tidak Ada Data Tersedia",
+                    zeroRecords: "Tidak Ditemukan Hasil",
+                },
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Semua"]],
+                columnDefs: [{
+                    targets: 2,
+                    searchable: false,
+                    orderable: false,
+                },{
+                    targets: 0,
+                    searchable: false,
+                }]
+            });
+        });
+    </script>
 </body>
 
 </html>

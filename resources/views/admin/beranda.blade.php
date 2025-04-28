@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Dashboard - Brand</title>
+    <title>InfoTA - Beranda</title>
     <link rel="stylesheet" href="{{ asset('/storage/assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
@@ -39,7 +39,7 @@
 
                     <li class="nav-item dropdown">
                         <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                            <i class="fas fa-users"></i>Kelola Pengguna
+                            <i class="fas fa-users"></i><span>Kelola Pengguna</span>
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/admin/dosen">
@@ -83,36 +83,66 @@
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="badge bg-danger badge-counter">3+</span>
+                                        @php
+                                            $unreadCount = auth()->guard('admin')->user()->unreadNotifications->count();
+                                        @endphp
+                                        @if ($unreadCount > 0)
+                                            <span class="badge bg-danger badge-counter">{{ $unreadCount }}</span>
+                                        @endif
                                         <i class="fas fa-bell fa-fw"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-                                        <h6 class="dropdown-header">alerts center</h6>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                        <h6 class="dropdown-header bg-danger border-danger">Notifikasi</h6>
+                                        @forelse (auth()->guard('admin')->user()->notifications as $notification)
+                                            @if (is_null($notification->read_at))
+                                                <form id="formNotification-{{  $notification->id }}" action="/notification/{{ $notification->id }}/read" method="post">
+                                                <div class="dropdown-item d-flex align-items-center" style="background-color: rgba(247, 162, 162, 0.1); cursor: pointer;" onclick="document.getElementById('formNotification-{{ $notification->id }}').submit()">
+                                                @csrf
+                                                @method('POST')
+                                                <div class="me-3">
+                                                    <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                        <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p class="fw-bold">{{ $notification->data['message'] }}</p>
+                                                </div>
+                                                </div>
+                                                </form>
+                                            @else
+                                                <div class="dropdown-item d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="icon-circle {{ $notification->data['bg_icon'] }}">
+                                                            <i class="{{ $notification->data['icon'] }} text-white"></i>
+                                                        </div>
+                                                    </div>
+                                                <div><span class="small text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
+                                                    <p>{{ $notification->data['message'] }}</p>
+                                                </div>
+                                                </div>
+                                            @endif
+                                        @empty
+                                        <div class="dropdown-item align-items-center" href="#">
+                                            <div class="text-center">
+                                                <p class="p-2 pt-4 fw-bold text-center h6">Notifikasi Tidak Ada</p>
                                             </div>
-                                            <div><span class="small text-gray-500">December 12, 2019</span>
-                                                <p>A new monthly report is ready to download!</p>
+                                        </div>    
+                                        @endforelse
+                                        <div class="row dropdown-footer">
+                                            <div class="col pe-1">
+                                                <form action="{{ route('admin.notifications.read') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Sudah Dibaca</button>
+                                                </form>
                                             </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                            <div class="col ps-1">
+                                                <form action="{{ route('admin.notifications.drop') }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item text-center fw-bold text-gray-900" href="#">Bersihkan Semua</button>
+                                                </form>
                                             </div>
-                                            <div><span class="small text-gray-500">December 7, 2019</span>
-                                                <p>$290.29 has been deposited into your account!</p>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item d-flex align-items-center" href="#">
-                                            <div class="me-3">
-                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
-                                            </div>
-                                            <div><span class="small text-gray-500">December 2, 2019</span>
-                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -120,9 +150,9 @@
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span>
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('admin')->user()->nama_pengguna }}</span>
                                         <span class="badge rounded-pill me-2" style="background: #881d1d;">Admin</span>
-                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/avatar1.jpeg') }}">
+                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->foto ?? 'default.jpg')) }}">
                                     </a>
 
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
@@ -146,6 +176,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 col-xl-3 mb-4">
+                            <a href="/admin/mahasiswa" style="text-decoration: none;">
                             <div class="card shadow border-start-primary py-2">
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
@@ -154,7 +185,7 @@
                                                 <span>mahasiswa (penyusun ta)</span>
                                             </div>
                                             <div class="text-dark fw-bold h5 mb-0">
-                                                <span>199</span>
+                                                <span>{{ number_format($JumlahDataMahasiswa) }}</span>
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -163,8 +194,10 @@
                                     </div>
                                 </div>
                             </div>
+                            </a>
                         </div>
                         <div class="col-md-6 col-xl-3 mb-4">
+                            <a href="/admin/dosen" style="text-decoration: none;">
                             <div class="card shadow border-start-success py-2">
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
@@ -173,7 +206,7 @@
                                                 <span>dosen (pembimbing)</span>
                                             </div>
                                             <div class="text-dark fw-bold h5 mb-0">
-                                                <span>14</span>
+                                                <span>{{ number_format($JumlahDataDosen) }}</span>
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -182,6 +215,7 @@
                                     </div>
                                 </div>
                             </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -195,5 +229,27 @@
     </div>
     <script src="{{ asset('/storage/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/storage/assets/js/theme.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        //message with sweetalert
+        @if(session('success'))
+            Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @elseif (session('error'))
+            Swal.fire({
+                icon: "error",
+                title: "GAGAL!",
+                text: "{{ session('error') }}",
+                showConfirmButton: false,
+                timer: 2000
+            });
+        @endif
+    </script>
 </body>
 </html>
