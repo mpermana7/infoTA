@@ -20,7 +20,6 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout.get');
 
 
 // Menuju Halaman Masing - Masing Role
-
 // Admin
 Route::get('/admin/beranda', [PageController::class, 'berandaAdmin'])->middleware('auth:admin');
 Route::get('/admin/template_dokumen', [PageController::class, 'templateDokumenAdmin'])->middleware('auth:admin');
@@ -36,7 +35,6 @@ Route::get('/download/{filename}', function ($filename) {
 
     return response()->download($path);
 });
-
 
 // Admin Notifikasi
 Route::post('/notification/{id}/read', function ($id) {
@@ -77,3 +75,13 @@ Route::post('/admin/mahasiswa/GantiKataSandi/{id}', [AdminController::class, 'Ga
 
 Route::post('/admin/profil/editFoto/{id}', [AdminController::class, 'EditFotoAdmin'])->name('admin.editFoto')->middleware('auth:admin');
 Route::post('/admin/profil/gantiKataSandi/{id}', [AdminController::class, 'GantiKataSandiAdmin'])->name('admin.gantiKataSandi')->middleware('auth:admin');
+
+#########################################################################################################################################################################################
+
+// Dosen
+Route::get('/dosen/beranda', [PageController::class, 'berandaDosen'])->middleware('auth:dosen');
+Route::get('/dosen/daftar_topik', [PageController::class, 'daftarTopikDosen'])->middleware('auth:dosen');
+Route::get('/dosen/template_laporan', [PageController::class, 'templateLaporanDosen'])->middleware('auth:dosen');
+Route::get('/dosen/dokumen_cd', [PageController::class, 'dokumenCdDosen'])->middleware('auth:dosen');
+Route::get('/dosen/progres_ta', [PageController::class, 'progresTaDosen'])->middleware('auth:dosen');
+Route::get('/dosen/profil', [PageController::class, 'profilDosen'])->middleware('auth:dosen');

@@ -26,6 +26,7 @@ class PageController extends Controller
         return view('login');
     }
 
+######################### Halaman ADMIN ########################################
     public function berandaAdmin(){
         return view('admin.beranda');
     }
@@ -45,4 +46,25 @@ class PageController extends Controller
     public function profilAdmin(){
         return view('admin.profil');
     }
+######################### Halaman ADMIN ########################################
+######################### Halaman DOSEN ########################################
+    public function berandaDosen() {
+        return view('dosen.beranda');
+    }
+    public function daftarTopikDosen() {
+        return view('dosen.daftar_topik');
+    }
+    public function templateLaporanDosen() {
+        return view('dosen.template_laporan');
+    }
+    public function dokumenCdDosen() {
+        return view('dosen.dokumen_cd');
+    }
+    public function progresTaDosen() {
+        return view('dosen.progres_ta');
+    }
+    public function profilDosen() {
+        return view('dosen.profil');
+    }
+######################### Halaman DOSEN ########################################
 }

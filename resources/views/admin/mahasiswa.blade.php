@@ -160,7 +160,7 @@
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                                         <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('admin')->user()->nama_pengguna }}</span>
                                         <span class="badge rounded-pill me-2" style="background: #881d1d;">Admin</span>
-                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->foto ?? 'default.jpg')) }}">
+                                        <img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('admin')->user()->image ?? 'default.jpg')) }}">
                                     </a>
 
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
@@ -308,7 +308,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
-                                <table class="table my-0" id="tableData">
+                                <table class="table table-striped table-hover" id="tableData">
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
@@ -686,7 +686,14 @@
                 },{
                     targets: 0,
                     searchable: false,
-                }]
+                }],
+                layout: {
+                    topEnd: {
+                        search: {
+                            placeholder: 'Cari Data Anda...'
+                        }
+                    }
+                }
             });
         });
 
