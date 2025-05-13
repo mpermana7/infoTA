@@ -85,3 +85,13 @@ Route::get('/dosen/template_laporan', [PageController::class, 'templateLaporanDo
 Route::get('/dosen/dokumen_cd', [PageController::class, 'dokumenCdDosen'])->middleware('auth:dosen');
 Route::get('/dosen/progres_ta', [PageController::class, 'progresTaDosen'])->middleware('auth:dosen');
 Route::get('/dosen/profil', [PageController::class, 'profilDosen'])->middleware('auth:dosen');
+
+// CRUD Pada Role Dosen
+Route::post('/dosen/daftar_topik', [DosenController::class, 'TambahDataDaftarTopik'])->name('daftar_topik.tambah')->middleware('auth:dosen');
+Route::get('/dosen/daftar_topik', [DosenController::class, 'MenampilkanDataDaftarTopik'])->middleware('auth:dosen');
+Route::get('/dosen/daftar_topik/hapus/{id}', [DosenController::class, 'HapusDataDaftarTopik'])->name('daftar_topik.hapus')->middleware('auth:dosen');
+Route::post('/dosen/daftar_topik/edit/{id}', [DosenController::class, 'EditDataDaftarTopik'])->name('daftar_topik.edit')->middleware('auth:dosen');
+
+Route::post('/dosen/profil/editFoto/{id}', [DosenController::class, 'EditFotoDosen'])->name('dosen.editFoto')->middleware('auth:dosen');
+Route::post('/dosen/profil/editBiodata/{id}', [DosenController::class, 'EditBiodataDosen'])->name('dosen.editBiodata')->middleware('auth:dosen');
+Route::post('/dosen/profil/gantiKataSandi/{id}', [DosenController::class, 'GantiKataSandiDosen'])->name('dosen.gantiKataSandi')->middleware('auth:dosen');

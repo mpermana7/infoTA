@@ -86,8 +86,22 @@
                     <div class="row mb-3">
                         <div class="col-lg-4">
                             <div class="card mb-3">
-                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('dosen')->user()->image ?? 'default.jpg')) }}" width="160" height="160">
-                                    <div class="mb-3"><input class="form-control-sm form-control" type="file" name="foto" accept="image/*" required=""><button class="btn btn-sm link-light mt-2" type="button" style="background: #881d1d;"><i class="fa fa-upload"></i>&nbsp;Unggah</button></div>
+                                <div class="card-body text-center shadow">
+                                    <img class="rounded-circle mb-3 mt-4" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('dosen')->user()->foto ?? 'default.jpg')) }}" width="160" height="160">
+                                    <div class="mb-3">
+                                        <form action="{{ route('dosen.editFoto', Auth::guard('dosen')->user()->id) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <input class="form-control-sm form-control @error('foto') is-invalid @enderror" type="file" name="foto" accept="image/*">
+                                        {{-- Pesan Error Untuk Foto --}}
+                                        @error('foto')
+                                            <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                            <br>
+                                        @enderror
+                                        <button class="btn btn-sm link-light mt-2" type="submit" style="background: #881d1d;">
+                                            <i class="fa fa-upload"></i>&nbsp;Unggah
+                                        </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,27 +113,75 @@
                                             <p class="text-dark m-0 fw-bold">Biodata</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
+                                            <form action="{{ route('dosen.editBiodata', Auth::guard('dosen')->user()->id) }}" method="POST" enctype="multipart/form-data">
+                                            @csrf
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="username"><strong>Nomor Induk Pegawai</strong></label><input class="form-control" type="text" id="username-1" placeholder="Nama Pengguna" name="nama_pengguna" required=""></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="nip"><strong>NIP</strong></label>
+                                                            <input class="form-control form-control-sm @error('nip') is-invalid @enderror" type="number" id="nip" value="{{ old('nip', Auth::guard('dosen')->user()->nip) }}" placeholder="Nomor Induk Pegawai" name="nip">
+                                                            {{-- Pesan Error Untuk NIP --}}
+                                                            @error('nip')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
+
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="email"><strong>Kode Dosen</strong></label><input class="form-control" type="password" name="kata_sandi" placeholder="Kata Sandi Lama" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="kode_dosen"><strong>Kode Dosen</strong></label>
+                                                            <input class="form-control form-control-sm @error('kode_dosen') is-invalid @enderror" type="text" id="kode_dosen" name="kode_dosen" value="{{ old('kode_dosen', Auth::guard('dosen')->user()->kode_dosen) }}" placeholder="Kode Dosen">
+                                                            {{-- Pesan Error Untuk Kode Dosen --}}
+                                                            @error('kode_dosen')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
+
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Nama</strong></label><input class="form-control" type="password" name="kata_sandi_baru" placeholder="Kata Sandi Baru" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="nama"><strong>Nama</strong></label>
+                                                            <input class="form-control form-control-sm @error('nama') is-invalid @enderror" type="text" name="nama" id="nama" value="{{ old('nama', Auth::guard('dosen')->user()->nama) }}" placeholder="Nama">
+                                                            {{-- Pesan Error Untuk Nama --}}
+                                                            @error('nama')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Email</strong></label><input class="form-control" type="password" name="konfirmasi_kata_sandi" placeholder="Konfirmasi Kata Sandi" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="email"><strong>Email</strong></label>
+                                                            <input class="form-control form-control-sm @error('email') is-invalid @enderror" type="email" id="email" name="email" value="{{ old('email', Auth::guard('dosen')->user()->email) }}" placeholder="Email">
+                                                            {{-- Pesan Error Untuk Email --}}
+                                                            @error('email')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
+
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>No Handphone</strong></label><input class="form-control" type="password" name="konfirmasi_kata_sandi" placeholder="Konfirmasi Kata Sandi" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="no_hp"><strong>No Handphone</strong></label>
+                                                            <input class="form-control form-control-sm @error('no_hp') is-invalid @enderror" type="text" id="no_hp" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" name="no_hp" value="{{ old('no_hp', Auth::guard('dosen')->user()->no_hp) }}" placeholder="Ex: 081XXXXXX">
+                                                            {{-- Pesan Error Untuk No Handphone --}}
+                                                            @error('no_hp')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3"><button class="btn btn-sm link-light" type="submit" style="background: #881d1d;"><i class="fa fa-save"></i>&nbsp;Perbarui</button></div>
+                                                <div class="mb-3">
+                                                    <button class="btn btn-sm link-light" type="submit" id="EditBiodata" style="background: #881d1d;" disabled>
+                                                        <i class="fa fa-save"></i>&nbsp;Perbarui
+                                                    </button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -132,21 +194,52 @@
                                             <p class="text-dark m-0 fw-bold">Ganti Kata Sandi</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
+                                            <form action="{{ route('dosen.gantiKataSandi', Auth::guard('dosen')->user()->id) }}" method="POST" enctype="multipart/form-data">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="username"><strong>Nama Pengguna</strong></label><input class="form-control" type="text" id="username" placeholder="Nama Pengguna" name="nama_pengguna" required=""></div>
+                                                        <div class="mb-3"><label class="form-label" for="username"><strong>Nama Pengguna</strong></label><input class="form-control form-control-sm" type="text" placeholder="Nama Pengguna" value="{{ Auth::guard('dosen')->user()->nama_pengguna }}" disabled></div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="email"><strong>Kata Sandi Lama</strong></label><input class="form-control" type="password" name="kata_sandi" placeholder="Kata Sandi Lama" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="email">
+                                                                <strong>Kata Sandi Lama</strong>
+                                                            </label>
+                                                            <input class="form-control form-control-sm @error('kata_sandi_lama') is-invalid @enderror" type="password" name="kata_sandi_lama" placeholder="Kata Sandi Lama">
+                                                            {{-- Pesan Error Untuk Kata Sandi Lama --}}
+                                                            @error('kata_sandi_lama')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Kata Sandi Baru</strong></label><input class="form-control" type="password" name="kata_sandi_baru" placeholder="Kata Sandi Baru" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="first_name">
+                                                                <strong>Kata Sandi Baru</strong>
+                                                            </label>
+                                                            <input class="form-control form-control-sm @error('kata_sandi_baru') is-invalid @enderror" type="password" name="kata_sandi_baru" placeholder="Kata Sandi Baru">
+                                                            {{-- Pesan Error Untuk Kata Sandi Baru --}}
+                                                            @error('kata_sandi_baru')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Konfirmasi Kata Sandi</strong></label><input class="form-control" type="password" name="konfirmasi_kata_sandi" placeholder="Konfirmasi Kata Sandi" required="" minlength="8"></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="first_name">
+                                                                <strong>Konfirmasi Kata Sandi</strong>
+                                                            </label>
+                                                            <input class="form-control form-control-sm @error('konfirmasi_kata_sandi') is-invalid @enderror" type="password" name="konfirmasi_kata_sandi" placeholder="Konfirmasi Kata Sandi">
+                                                            {{-- Pesan Error Untuk Konfirmasi Kata Sandi --}}
+                                                            @error('konfirmasi_kata_sandi')
+                                                                <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                                <br>
+                                                            @enderror
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3"><button class="btn btn-sm link-light" type="submit" style="background: #881d1d;"><i class="fa fa-save"></i>&nbsp;Perbarui</button></div>
@@ -189,6 +282,16 @@
                 timer: 2000
             });
         @endif
+
+        // Button Edit Biodata
+        const inputs = [nip, kode_dosen, nama, email, no_hp];
+        const initial = inputs.map(input => input.value);
+
+        inputs.forEach((input, i) => {
+            input.addEventListener('input', () => {
+            EditBiodata.disabled = !inputs.some((el, j) => el.value !== initial[j]);
+            });
+        });
     </script>
 </body>
 </html>
