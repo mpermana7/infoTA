@@ -67,4 +67,15 @@ class PageController extends Controller
         return view('dosen.profil');
     }
 ######################### Halaman DOSEN ########################################
+######################### Halaman MAHASIWA ########################################
+    public function berandaMahasiswa() {
+        return view('mahasiswa.beranda');
+    }
+    public function daftarTopikMahasiswa() {
+        return view('mahasiswa.daftar_topik');
+    }
+    public function kelompokMahasiswa() {
+        return view('mahasiswa.kelompok');
+    }
+######################### Halaman MAHASIWA ########################################
 }

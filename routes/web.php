@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Mahasiswa;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\PageController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MahasiswaController;
 
 // Landing Page
 Route::get('/', [PageController::class, 'index']);
@@ -95,3 +97,14 @@ Route::post('/dosen/daftar_topik/edit/{id}', [DosenController::class, 'EditDataD
 Route::post('/dosen/profil/editFoto/{id}', [DosenController::class, 'EditFotoDosen'])->name('dosen.editFoto')->middleware('auth:dosen');
 Route::post('/dosen/profil/editBiodata/{id}', [DosenController::class, 'EditBiodataDosen'])->name('dosen.editBiodata')->middleware('auth:dosen');
 Route::post('/dosen/profil/gantiKataSandi/{id}', [DosenController::class, 'GantiKataSandiDosen'])->name('dosen.gantiKataSandi')->middleware('auth:dosen');
+
+#########################################################################################################################################################################################
+
+// Mahasiswa
+Route::get('/mahasiswa/beranda', [PageController::class, 'berandaMahasiswa'])->middleware('auth:mahasiswa');
+Route::get('/mahasiswa/daftar_topik', [PageController::class, 'daftarTopikMahasiswa'])->middleware('auth:mahasiswa');
+Route::get('/mahasiswa/kelompok', [PageController::class, 'kelompokMahasiswa'])->middleware('auth:mahasiswa');
+
+
+// CRUD Pada Role Mahasiwa
+Route::get('/mahasiswa/kelompok', [MahasiswaController::class, 'dataMahasiswa'])->middleware('auth:mahasiswa');

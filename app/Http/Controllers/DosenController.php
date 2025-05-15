@@ -199,7 +199,8 @@ class DosenController extends Controller
      * Menampilkan Data Daftar Topik
      */
     public function MenampilkanDataDaftarTopik() : View {
-        $menampilkanDataDaftarTopik = DaftarTopik::all();
+        $kode_dosen = auth()->guard('dosen')->user()->kode_dosen;
+        $menampilkanDataDaftarTopik = DaftarTopik::where('kode_dosen', $kode_dosen)->get();
         $modalTopik = DaftarTopik::all();
         return view('dosen.daftar_topik', compact('menampilkanDataDaftarTopik','modalTopik'));
     }

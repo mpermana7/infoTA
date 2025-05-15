@@ -392,25 +392,14 @@
                                                                     @enderror
 
                                                                     <label class="form-label text-dark mt-3" style="font-weight: bold;">Program Studi :</label>
-                                                                    <select class="form-select form-select-sm @error('program_studi_'.$data->id) is-invalid @enderror" name="program_studi_{{$data->id}}" id="program_studi{{ $data->id }}">
-                                                                        <option selected disabled>-- Pilih Program Studi --</option>
-                                                                        @if(old('program_studi', $data->program_studi))
-                                                                            <option value="{{ old('program_studi', $data->program_studi) }}" selected>{{ old('program_studi', $data->program_studi) }}</option>
-                                                                        @endif
+                                                                    <select class="form-select form-select-sm @error('program_studi_'.$data->id) is-invalid @enderror" name="program_studi_{{$data->id}}" id="program_studi{{ $data->id }}" data-default="{{ old('program_studi_' . $data->id, $data->program_studi) }}">
+                                                                        <option value="">-- Pilih Program Studi --</option>
                                                                     </select>
                                                                     {{-- Pesan Error Untuk Program Studi --}}
                                                                     @error('program_studi_'.$data->id)
                                                                         <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
                                                                         <br>
                                                                     @enderror
-                                                                    <script>
-                                                                        // Panggil fungsi saat halaman dimuat untuk mengisi program studi jika fakultas sudah dipilih
-                                                                        document.addEventListener('DOMContentLoaded', function() {
-                                                                            @if(old('fakultas', $data->fakultas))
-                                                                                updateProgramStudi({{ $data->id }});
-                                                                            @endif
-                                                                        });
-                                                                    </script>
 
                                                                     <label class="form-label text-dark mt-3" style="font-weight: bold;">Fakultas :</label>
                                                                     <select class="form-select form-select-sm @error('fakultas_'.$data->id) is-invalid @enderror" name="fakultas_{{$data->id}}" id="fakultas{{ $data->id }}" onchange="updateProgramStudi({{ $data->id }})">
@@ -698,7 +687,7 @@
         });
 
         // Form Select Fakultas dan Program Studi
-        const data = {
+        const dataProdi = {
             "Fakultas Teknik Elektro (FTE)": ["S1 Teknik Elektro", "S1 Teknik Telekomunikasi", "S1 Teknik Fisika", "S1 Teknik Komputer", "S1 Teknik Biomedis", "S1 Teknik Sistem Energi", "S1 Teknik Telekomunikasi (Jakarta)", "S2 Teknik Elektro", "S3 Teknik Elektro"],
             "Fakultas Rekayasa Industri (FRI)": ["S1 Teknik Industri", "S1 Sistem Informasi", "S1 Teknik Logistik", "S1 Manajemen Rekayasa", "S1 Sistem Informasi (Jakarta)", "S2 Teknik Industri", "S2 Sistem Informasi"],
             "Fakultas Informatika (FIF)": ["S1 Informatika", "S1 Teknologi Informasi", "S1 Informatika PJJ", "S1 Sains Data", "S1 Rekayasa Perangkat Lunak", "S1 Teknologi Informasi (Jakarta)", "S2 Informatika", "S2 Ilmu Forensik", "S3 Informatika"],
@@ -708,48 +697,44 @@
             "Fakultas Ilmu Terapan (FIT)": ["D3 Teknik Telekomunikasi", "D3 Rekayasa Perangkat Lunak Aplikasi", "D3 Sistem Informasi", "D3 Sistem Informasi Akuntansi", "D3 Teknologi Komputer", "D3 Digital Marketing", "D3 Hospitality & Culinary Art", "D3 Teknik Telekomunikasi (Jakarat)", "S1 Terapan Digital Creative Multimedia", "S1 Terapan Sistem Informasi Kota Cerdas"]
         };
     
-        function updateProgramStudi(id_mahasiswa) {
-            const fakultas = document.getElementById('fakultas' + id_mahasiswa).value;
-            const programStudiSelect = document.getElementById('program_studi' + id_mahasiswa);
-            const oldProgramStudi = '{{ old("program_studi", $data->program_studi ?? "")}}';
-    
-            // Kosongkan pilihan sebelumnya
-            programStudiSelect.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
-    
-            if (data[fakultas]) {
-                data[fakultas].forEach(function(prodi) {
-                    const option = document.createElement('option');
-                    option.value = prodi;
-                    option.text = prodi;
-                    // Set selected jika sama dengan old value
-                    if (prodi === oldProgramStudi) {
-                        option.selected = true;
-                    }
-                    programStudiSelect.add(option);
-                });
-            }
+   function updateProgramStudi(id) {
+      // Ambil elemen berdasarkan id dinamis
+      const fakultasEl = document.getElementById('fakultas' + id);
+      const prodiEl = document.getElementById('program_studi' + id);
+      // Ambil nilai default program studi dari atribut data-default
+      const defaultProdi = prodiEl.getAttribute('data-default') || '';
 
-            // // Jika fakultas dipilih, isi dropdown
-            // if (fakultas && data[fakultas]) {
-            //     data[fakultas].forEach(prodi => {
-            //         const option = new Option(prodi, prodi);
-            //         option.selected = (prodi === oldProgramStudi);
-            //         programStudiSelect.add(option);
-            //     });
-            // }
-        }
+      // Bersihkan opsi-opsi yang ada dan tambahkan opsi awal
+      prodiEl.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
 
-
-// Panggil fungsi saat halaman selesai dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    // Jika fakultas sudah dipilih (saat edit data), update program studi
-    if (document.getElementById('fakultas').value) {
-        updateProgramStudi(id_mahasiswa);
+      const fakultasVal = fakultasEl.value;
+      if (dataProdi[fakultasVal]) {
+        dataProdi[fakultasVal].forEach(function(prodi) {
+          const option = document.createElement('option');
+          option.value = prodi;
+          option.text = prodi;
+          // Tandai opsi jika sama dengan nilai default
+          if (prodi === defaultProdi) {
+            option.selected = true;
+          }
+          prodiEl.add(option);
+        });
+      }
     }
-    
-    // Juga panggil saat ada perubahan fakultas
-    document.getElementById('fakultas').addEventListener('change', updateProgramStudi);
-});
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Kita asumsikan variabel $mahasiswa merupakan koleksi data yang dikirimkan dari controller
+      // Gunakan Blade untuk membentuk array id, misalnya:
+      const idList = @json($menampilkanDataMahasiswa->pluck('id'));
+      
+      // Loop untuk setiap data mahasiswa
+      idList.forEach(function(id) {
+        updateProgramStudi(id);
+        document.getElementById('fakultas' + id).addEventListener('change', function() {
+          updateProgramStudi(id);
+        });
+      });
+    });
 
         const dataP = {
             "Fakultas Teknik Elektro (FTE)": ["S1 Teknik Elektro", "S1 Teknik Telekomunikasi", "S1 Teknik Fisika", "S1 Teknik Komputer", "S1 Teknik Biomedis", "S1 Teknik Sistem Energi", "S1 Teknik Telekomunikasi (Jakarta)", "S2 Teknik Elektro", "S3 Teknik Elektro"],
