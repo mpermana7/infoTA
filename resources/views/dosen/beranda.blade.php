@@ -26,10 +26,21 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link active" href="/dosen/beranda"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/daftar_topik"><i class="far fa-file-alt"></i><span>Daftar Topik</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dosen/daftar_topik_mandiri"><i class="far fa-file-alt"></i><span>Daftar Topik Mandiri</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/template_laporan"><i class="fas fa-file-word"></i><span>Template Laporan</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/dokumen_cd"><i class="fas fa-file-word"></i><span>Dokumen Capstone Design</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/progres_ta"><i class="fas fa-chart-line"></i><span>Progres Tugas Akhir</span></a></li>
                     <li class="nav-item"><a class="nav-link disabled" href="/dosen/penilaian_mahasiswa"><i class="fas fa-pencil-alt"></i><span>Penilaian Mahasiswa</span></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                            <i class="fas fa-user-plus"></i><span>Pengajuan</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/dosen/pengajuan_topik">Pengajuan Topik</a>
+                            <a class="dropdown-item" href="/dosen/pengajuan_pembimbing">Pengajuan Pembimbing</a>
+                            <a class="dropdown-item" href="/dosen/pengajuan_bimbingan">Pengajuan Bimbingan</a>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <hr><a class="nav-link" href="/dosen/profil"><i class="fas fa-user"></i><span>Profil</span></a>
                     </li>

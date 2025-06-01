@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('foto')->nullable();
             $table->bigInteger('nip')->unique();
-            $table->string('kode_dosen')->unique();
+            $table->string('kode_dosen')->nullable()->unique();
             $table->string('nama');
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('no_hp')->nullable()->unique();
             $table->string('nama_pengguna')->unique();
             $table->string('kata_sandi');
             $table->string('role')->default('dosen');
+            $table->integer('wajib_ganti_kata_sandi');
             $table->timestamps();
         });
     }

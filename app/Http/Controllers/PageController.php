@@ -26,6 +26,10 @@ class PageController extends Controller
         return view('login');
     }
 
+    public function KataSandiBaru(){
+        return view('buat_kata_sandi');
+    }
+
 ######################### Halaman ADMIN ########################################
     public function berandaAdmin(){
         return view('admin.beranda');
@@ -33,6 +37,10 @@ class PageController extends Controller
 
     public function templateDokumenAdmin(){
         return view('admin.template_dokumen');
+    }
+
+    public function bidangTugasAkhirAdmin(){
+        return view('admin.bidang_tugas_akhir');
     }
 
     public function mahasiswaAdmin(){
@@ -62,6 +70,12 @@ class PageController extends Controller
     }
     public function progresTaDosen() {
         return view('dosen.progres_ta');
+    }
+    public function pengajuanTopik() {
+        return view('dosen.pengajuan_topik');
+    }
+    public function pengajuanPembimbing() {
+        return view('dosen.pengajuan_pembimbing');
     }
     public function profilDosen() {
         return view('dosen.profil');

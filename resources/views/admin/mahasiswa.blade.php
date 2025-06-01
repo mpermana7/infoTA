@@ -42,6 +42,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/bidang_tugas_akhir">
+                            <i class="fas fa-id-card-alt"></i>
+                            <span>Bidang Tugas Akhir</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item dropdown">
                         <a class="dropdown-toggle nav-link active" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                             <i class="fas fa-users"></i>
@@ -184,9 +191,51 @@
                     <div class="card shadow">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
                             <p class="text-dark m-0 fw-bold">Data Mahasiswa</p>
-                            <button class="btn btn-sm link-light" type="button" style="background: #881d1d;" data-bs-toggle="modal" data-bs-target="#ModalTambahMahasiswa">
-                                <i class="fas fa-plus"></i>&nbsp;Tambah Mahasiswa
-                            </button>
+                            <div class="ms-auto d-flex gap-2">
+                                <button class="btn btn-sm link-light" type="button" style="background: #881d1d;" data-bs-toggle="modal" data-bs-target="#ModalImportMahasiswa">
+                                    <i class="fas fa-plus"></i>&nbsp;Import Mahasiswa CSV
+                                </button>
+                                <button class="btn btn-sm link-light" type="button" style="background: #881d1d;" data-bs-toggle="modal" data-bs-target="#ModalTambahMahasiswa">
+                                    <i class="fas fa-plus"></i>&nbsp;Tambah Mahasiswa
+                                </button>
+                            </div>
+                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalImportMahasiswa">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <form action="{{ route('mahasiswa.import') }}" method="post" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-dark" style="color: var(--bs-emphasis-color);font-weight: bold;">Import Mahasiswa Dari CSV</h5>
+                                                    <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p class="text-center">
+                                                        <a href="{{ url('/admin/mahasiswa/download/template_mahasiswa/') }}" class="btn btn-sm" type="button" style="background: #881d1d;color: rgb(248,249,252);">
+                                                            <i class="fas fa-download"></i>&nbsp;Unduh Template CSV Mahasiswa
+                                                        </a>
+                                                    </p>
+                                                    <hr>
+                                                    <label class="form-label text-dark" style="font-weight: bold;">File :</label>
+                                                    <input class="form-control form-control-sm @error('file') is-invalid @enderror" type="file" name="file" accept=".csv">
+                                                    {{-- Pesan Error Untuk Import --}}
+                                                    @error('file')
+                                                        <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
+                                                        <br>
+                                                    @enderror
+                                                    <small>* Catatan: File CSV Harus Sesuai Dengan Template Yang Tersedia</small>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary btn-sm" type="reset">
+                                                        <i class="fa fa-refresh"></i>&nbsp;Bersihkan
+                                                    </button>
+                                                    <button class="btn btn-sm link-light" type="submit" style="background: #881d1d;">
+                                                        <i class="fa fa-save"></i>&nbsp;Simpan
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             <div class="modal fade" role="dialog" tabindex="-1" id="ModalTambahMahasiswa">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">

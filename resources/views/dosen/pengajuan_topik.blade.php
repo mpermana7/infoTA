@@ -23,30 +23,30 @@
                     <div class="sidebar-brand-icon"><img class="img-fluid" src="{{ asset('/storage/assets/img/Logo/Logo%20White%20(1000%20x%201000%20piksel).png') }}" width="100px"></div>
                 </a>
                 <hr class="sidebar-divider my-0">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
+                <ul class="navbar-nav text-light" id="accordionSidebar-1">
                     <li class="nav-item"><a class="nav-link" href="/dosen/beranda"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/daftar_topik"><i class="far fa-file-alt"></i><span>Daftar Topik</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/daftar_topik_mandiri"><i class="far fa-file-alt"></i><span>Daftar Topik Mandiri</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/template_laporan"><i class="fas fa-file-word"></i><span>Template Laporan</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/dosen/dokumen_cd"><i class="fas fa-file-word"></i><span>Dokumen Capstone Design</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dosen/dokumen_cd"><i class="fas fa-file-word"></i><span>Dokumen Capstone Design</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/progres_ta"><i class="fas fa-chart-line"></i><span>Progres Tugas Akhir</span></a></li>
                     <li class="nav-item"><a class="nav-link disabled" href="/dosen/penilaian_mahasiswa"><i class="fas fa-pencil-alt"></i><span>Penilaian Mahasiswa</span></a></li>
                     <li class="nav-item dropdown">
-                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                        <a class="dropdown-toggle nav-link active" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                             <i class="fas fa-user-plus"></i><span>Pengajuan</span>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/dosen/pengajuan_topik">Pengajuan Topik</a>
+                            <a class="dropdown-item active" href="/dosen/pengajuan_topik">Pengajuan Topik</a>
                             <a class="dropdown-item" href="/dosen/pengajuan_pembimbing">Pengajuan Pembimbing</a>
                             <a class="dropdown-item" href="/dosen/pengajuan_bimbingan">Pengajuan Bimbingan</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <hr><a class="nav-link" href="/dosen/profil"><i class="fas fa-user"></i><span>Profil</span></a>
+                        <hr><a class="nav-link" href="/dose/profil"><i class="fas fa-user"></i><span>Profil</span></a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i><span>Keluar</span></a></li>
                 </ul>
-                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle-1" type="button"></button></div>
             </div>
         </nav>
         <div class="d-flex flex-column" id="content-wrapper">
@@ -84,7 +84,7 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
-                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('dosen')->user()->nama_pengguna }}</span><span class="badge rounded-pill me-2" style="background: #881d1d;">Dosen</span><img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('dosen')->user()->foto ?? 'default.jpg')) }}"></a>
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">{{ Auth::guard('dosen')->user()->nama_pengguna }}</span><span class="badge rounded-pill me-2" style="background: #881d1d;">Mahasiswa</span><img class="border rounded-circle img-profile" src="{{ asset('/storage/assets/img/avatars/'.(Auth::guard('dosen')->user()->foto ?? 'default.jpg')) }}"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="/dosen/profil"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profil</a>
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Keluar</a>
                                     </div>
@@ -95,111 +95,110 @@
                 </nav>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Dokumen Capstone Design</h3>
+                        <h3 class="text-dark mb-0">Pengajuan Topik</h3>
                     </div>
                     <div class="card shadow">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <p class="text-dark m-0 fw-bold">Data Dokumen Capstone Design</p>
+                            <p class="text-dark m-0 fw-bold">Data Pengajuan Topik</p>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info">
                                 <table class="table table-striped table-hover" id="tableData">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>File</th>
-                                            <th>Kelompok</th>
-                                            <th>Status Pembimbing 1</th>
-                                            <th>Status Pembimbing 2</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">Judul</th>
+                                            <th class="text-center">NIM</th>
+                                            <th class="text-center">Nama</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($menampilkanDataPengajuanTopik as $data)
                                         <tr>
-                                            <td>1</td>
-                                            <td>CD1_template.docx</td>
-                                            <td>1</td>
-                                            <td><span class="badge bg-success">Disetujui</span></td>
-                                            <td><span class="badge bg-success">Disetujui</span></td>
-                                            <td><button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditDokumenCapstoneDesign"><i class="fas fa-edit"></i></button><button class="btn btn-info btn-sm ms-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalLihatDokumenCapstoneDesign"><i class="fas fa-eye"></i></button><button class="btn btn-primary btn-sm ms-1" type="button"><i class="fas fa-download"></i></button>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditDokumenCapstoneDesign">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <form method="post" enctype="multipart/form-data">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" style="font-weight: bold;">Edit Dokumen Capstone Design</h5><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
-                                                                </div>
-                                                                <div class="modal-body"><label class="form-label" style="font-weight: bold;">File Dokumen Capstone Design :</label><input class="form-control form-control-sm form-control" type="file" name="template_dokumen" required=""><label class="form-label mt-3" style="font-weight: bold;">Status Pembimbing 1 :</label><select class="form-select form-select-sm" name="status">
-                                                                        <option value="">-- Pilih Status --</option>
-                                                                        <option value="Belum Diperiksa">Belum Diperiksa</option>
-                                                                        <option value="Disetujui">Disetujui</option>
-                                                                        <option value="Perbaiki">Perbaiki</option>
-                                                                        <option value="Tidak Disetujui">Tidak Disetujui</option>
-                                                                    </select><label class="form-label mt-3" style="font-weight: bold;">Status Pembimbing 2 :</label><select class="form-select form-select-sm" name="status">
-                                                                        <option value="">-- Pilih Status --</option>
-                                                                        <option value="Belum Diperiksa">Belum Diperiksa</option>
-                                                                        <option value="Disetujui">Disetujui</option>
-                                                                        <option value="Perbaiki">Perbaiki</option>
-                                                                        <option value="Tidak Disetujui">Tidak Disetujui</option>
-                                                                    </select><label class="form-label mt-3" style="font-weight: bold;">Catatan :</label><textarea class="form-control form-control-sm" name="deskripsi" placeholder="Catatan..." rows="5"></textarea></div>
-                                                                <div class="modal-footer"><button class="btn btn-secondary btn-sm" type="reset"><i class="fa fa-refresh"></i>&nbsp;Bersihkan</button><button class="btn btn-warning btn-sm" type="submit" style="font-weight: bold;"><i class="fa fa-save"></i>&nbsp;Simpan</button></div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalLihatDokumenCapstoneDesign">
+                                            <td class="text-center">{{ $loop->iteration }}</td>
+                                            <td class="text-center">{{ $data->judul }}</td>
+                                            <td class="text-center">{{ $data->nim }}</td>
+                                            <td class="text-center">{{ $data->nama }}</td>
+                                            <td class="text-center">
+                                                @if ($data->status == 'Disetujui')
+                                                    <span class="badge rounded-pill bg-success m-1">Disetujui</span>
+                                                @endif
+                                                @if ($data->status == 'Tidak Disetujui')
+                                                    <span class="badge rounded-pill bg-danger m-1">Tidak Disetujui</span>
+                                                @endif
+                                                @if ($data->status == 'Menunggu Persetujuan')
+                                                    <span class="badge rounded-pill bg-warning text-dark m-1">Menunggu Persetujuan</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <p class="text-center">
+                                                @if ($data->status == 'Menunggu Persetujuan')
+                                                <button class="btn btn-success btn-sm link-light me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalAccTopik{{ $data->id }}">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm link-light" type="button" data-bs-toggle="modal" data-bs-target="#ModalRejectTopik{{ $data->id }}">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                                @else
+                                                <span>-</span>
+                                                @endif
+                                                </p>
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalAccTopik{{ $data->id }}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" style="font-weight: bold;">Lihat Dokumen Capstone Design</h5><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                                                                <h4 class="modal-title">Konfirmasi Pengajuan Topik</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                                             </div>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-5"><span style="font-weight: bold;">File</span></div>
-                                                                    <div class="col-7">
-                                                                        <p><span class="fw-bold">:&nbsp;</span>CD1 - Budidaya Ikan Air Tawar</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-5"><span style="font-weight: bold;">Kelompok</span></div>
-                                                                    <div class="col-7">
-                                                                        <p><span class="fw-bold">:&nbsp;</span>1</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-5"><span style="font-weight: bold;">Status Pembimbing 1</span></div>
-                                                                    <div class="col-7">
-                                                                        <p><span class="fw-bold">:&nbsp;</span><span class="badge rounded-pill bg-success">Disetujui</span></p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-5"><span style="font-weight: bold;">Status Pembimbing 2</span></div>
-                                                                    <div class="col-7">
-                                                                        <p><span class="fw-bold">:&nbsp;</span><span class="badge rounded-pill bg-success">Disetujui</span></p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-5"><span style="font-weight: bold;">Catatan</span></div>
-                                                                    <div class="col-7">
-                                                                        <p><span class="fw-bold">:&nbsp;</span>Good Job!</p>
-                                                                    </div>
-                                                                </div>
+                                                            <div class="modal-body text-center">
+                                                                <h6 class="display-1"><i class="fas fa-exclamation-triangle"></i></h6>
+                                                                <h6>Apakah Anda Yakin Ingin Menerimanya?</h6>
                                                             </div>
-                                                            <div class="modal-footer"><button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal"><i class="fa fa-close"></i>&nbsp;Tutup</button></div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">
+                                                                    <i class="fas fa-times"></i>&nbsp;Batalkan
+                                                                </button>
+                                                                <a href="{{ route('pengajuan_topik.acc', $data->id ) }}" class="btn btn-sm" type="button" style="background: #881d1d;color: rgb(255,255,255);">
+                                                                    <i class="fas fa-check"></i>&nbsp;Ya, Yakin
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalRejectTopik{{ $data->id }}">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Konfirmasi Pengajuan Topik</h4><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body text-center">
+                                                                <h6 class="display-1"><i class="fas fa-exclamation-triangle"></i></h6>
+                                                                <h6>Apakah Anda Yakin Ingin Menolaknya?</h6>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">
+                                                                    <i class="fas fa-times"></i>&nbsp;Batalkan
+                                                                </button>
+                                                                <a href="{{ route('pengajuan_topik.reject', $data->id) }}" class="btn btn-sm" type="button" style="background: #881d1d;color: rgb(255,255,255);">
+                                                                    <i class="fas fa-check"></i>&nbsp;Ya, Yakin
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td><strong>No</strong></td>
-                                            <td><strong>File</strong></td>
-                                            <td><strong>Kelompok</strong></td>
-                                            <td><strong>Status Pembimbing 1</strong></td>
-                                            <td><strong>Status Pembimbing 2</strong></td>
-                                            <td><strong>Aksi</strong></td>
+                                            <td class="text-center"><strong>No</strong></td>
+                                            <td class="text-center"><strong>Judul</strong></td>
+                                            <td class="text-center"><strong>NIM</strong></td>
+                                            <td class="text-center"><strong>Nama</strong></td>
+                                            <td class="text-center"><strong>Status</strong></td>
+                                            <td class="text-center"><strong>Aksi</strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -215,7 +214,9 @@
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     </div>
-   <script src="{{ asset('/storage/assets/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../assets/js/theme.js"></script>
+       <script src="{{ asset('/storage/assets/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('/storage/assets/js/theme.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Dosen;
+use App\Models\Bidang;
 use App\Models\Template;
 use App\Models\Mahasiswa;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Notifications\PenambahanTemplateDokumen;
+use DateTime;
 
 class AdminController extends Controller
 {
@@ -212,6 +215,7 @@ class AdminController extends Controller
             'nama_pengguna' => $request->nama_pengguna,
             'kata_sandi' => Hash::make($request->kata_sandi),
             'role' => 'dosen',
+            'wajib_ganti_kata_sandi' => '0',
         ]);
 
         // Redirect ke Halaman Dosen
@@ -409,6 +413,7 @@ class AdminController extends Controller
             'nama_pengguna' => $request->nama_pengguna,
             'kata_sandi' => Hash::make($request->kata_sandi),
             'role' => 'mahasiswa',
+            'wajib_ganti_kata_sandi' => '0',
         ]);
 
         return redirect('admin/mahasiswa')->with(['success' => 'Data Berhasil Disimpan!']);
@@ -619,5 +624,286 @@ class AdminController extends Controller
         ]);
 
         return redirect('/admin/profil')->with(['success' => 'Kata Sandi Berhasil Diperbarui']);
+    }
+
+    /**
+     * Menambahkan Data Bidang
+     */
+    public function TambahDataBidang(Request $request) : RedirectResponse {
+        // Validasi Form
+        $validasi = Validator::make($request->all(), [
+            'bidang' => 'required|unique:daftar_bidang,bidang',
+        ],[
+            'bidang.required' => 'Bidang Wajib Diisi!',
+            'bidang.unique' => 'Bidang Sudah Terdaftar, Coba Masukkan Bidang Lain!',
+        ]);
+
+        if ($validasi->fails()) {
+            return redirect()->back()->withErrors($validasi)->with(['error' => 'Gagal Menambahkan Data!']);
+        }
+
+        // Simpan Data Bidang
+        $bidang = Bidang::create([
+            'bidang' => $request->bidang,
+        ]);
+
+        return redirect('admin/bidang_tugas_akhir')->with(['success' => 'Data Berhasil Disimpan!']);
+    }
+
+    /**
+     * Menampilkan Data Bidang
+     */
+    public function MenampilkanDataBidang() : View {
+        $menampilkanDataBidang = Bidang::all();
+        return view('admin.bidang_tugas_akhir', compact('menampilkanDataBidang'));
+    }
+
+    /**
+     * Edit Data Bidang
+     */
+    public function EditDataBidang(Request $request, $id) : RedirectResponse {
+        // Validasi Form
+        $validasi = Validator::make($request->all(), [
+            'bidang_'.$id => 'required|unique:daftar_bidang,bidang,'.$id.',id',
+        ],[
+            'bidang_'.$id.'.required' => 'Bidang Wajib Diisi!',
+            'bidang_'.$id.'.unique' => 'Bidang Sudah Terdaftar, Coba Masukkan Bidang Lain!',
+        ]);
+
+        if ($validasi->fails()) {
+            return redirect()->back()->withErrors($validasi)->with(['error' => 'Gagal Menambahkan Data!']);
+        }
+
+        // Get Bidang by ID
+        $bidang = Bidang::findOrFail($id);
+
+        // Perbarui Data Bidang
+        $bidang->update([
+            'bidang' => $request->input('bidang_'.$id),
+        ]);
+
+        return redirect('/admin/bidang_tugas_akhir')->with(['success' => 'Data Berhasil Diperbarui!']);
+    }
+
+    /**
+     * Hapus Data Bidang
+     */
+    public function HapusDataBidang($id) : RedirectResponse {
+        // Get Bidang by ID
+        $bidang = Bidang::findOrFail($id);
+
+        // Hapus Data Bidang
+        $bidang->delete();
+
+        return redirect('/admin/bidang_tugas_akhir')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    /**
+     * Import Data Dosen
+     */
+    public function ImportDataDosen(Request $request) : RedirectResponse {
+        // Validasi Form
+        $validasi = Validator::make($request->all(), [
+            'file' => 'required|mimetypes:text/plain,text/csv,application/csv,application/vnd.ms-excel|max:21504',
+        ],[
+            'file.required' => 'File CSV Wajib Diisi!',
+            'file.mimetypes' => 'Jenis File Harus CSV',
+            'file.max' => 'Ukuran File Maksimal 21MB',
+        ]);
+
+        if ($validasi->fails()) {
+            return redirect()->back()->withErrors($validasi)->with(['error' => 'Gagal Import Data!']);
+        }
+
+        $file = fopen($request->file('file'), 'r');
+        $BarisPertama = true;
+        $MasukkanData = [];
+        $csvNip = [];
+        $csvNama = [];
+
+        while (($row = fgetcsv($file, 1000, ',')) !== false) {
+            if ($BarisPertama) {
+                $BarisPertama = false;
+
+                // Validasi Struktur Header
+                $header = ['nip', 'nama'];
+                $aktualheader = array_map('strtolower', array_map('trim', $row));
+
+                if ($aktualheader !== $header) {
+                    fclose($file);
+                    return back()->with(['error' => 'Format CSV Tidak Sesuai Template!']);
+                }
+                
+                continue;
+            }
+
+            $nip = trim($row[0] ?? '');
+            $nama = trim($row[1] ?? '');
+
+            // Skip Jika Kosong
+            if (empty($nip) || empty($nama)) continue;
+
+            // Cek duplikat dalam file CSV
+            if (in_array($nip, $csvNip) && in_array($nama, $csvNama)) {
+                return redirect()->back()->with(['error' => 'Didalam File Ada Data Yang Duplikat']);
+            }
+            if (in_array($nip, $csvNip)) {
+                return redirect()->back()->with(['error' => 'Didalam File Ada NIP Yang Duplikat']);
+            }
+            if (in_array($nama, $csvNama)) {
+                return redirect()->back()->with(['error' => 'Didalam File Ada Nama Yang Duplikat']);
+            }
+
+            // Cek Duplikat di dalam Database
+            $exists = DB::table('dosen')
+                ->where('nip', $nip)
+                ->orWhere('nama', $nama)
+                ->exists();
+
+            if ($exists) {
+                return back()->with(['error' => 'Data $nip atau $nama Sudah Terdaftar']);
+            }
+
+            $csvNip[] = $nip;
+            $csvNama[] = $nama;
+
+            // Cek apakah nama Pengguna sudah ada di database
+            if (Mahasiswa::where('nama_pengguna', $nip)->exists()) {
+                return back()->withErrors(['file' => 'Nama Pengguna Sudah Ada, Silahkan Coba Lagi'])->with(['error' => 'Gagal Menambahkan Data!']);
+            }
+
+            $MasukkanData[] = [
+                'foto' => null,
+                'nip' => $nip,
+                'kode_dosen' => null,
+                'nama' => $nama,
+                'email' => null,
+                'no_hp' => null,
+                'nama_pengguna' => $nip,
+                'kata_sandi' => Hash::make($nip),
+                'role' => 'dosen',
+                'wajib_ganti_kata_sandi' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        fclose($file);
+
+        if (empty($MasukkanData)) {
+            return back()->withErrors(['file' => 'File CSV Tidak Memiliki Data Dosen'])->with(['error' => 'Data File CSV Kosong!']);
+        }
+
+        if (!empty($MasukkanData)) {
+            DB::table('dosen')->insert($MasukkanData);
+        }
+
+        return redirect('admin/dosen')->with(['success' => 'Data Dosen Berhasil Diimport!']);
+    }
+
+        /**
+     * Import Data Mahasiswa
+     */
+    public function ImportDataMahasiswa(Request $request) : RedirectResponse {
+        // Validasi Form
+        $validasi = Validator::make($request->all(), [
+            'file' => 'required|mimetypes:text/plain,text/csv,application/csv,application/vnd.ms-excel|max:21504',
+        ],[
+            'file.required' => 'File CSV Wajib Diisi!',
+            'file.mimetypes' => 'Jenis File Harus CSV',
+            'file.max' => 'Ukuran File Maksimal 21MB',
+        ]);
+
+        if ($validasi->fails()) {
+            return redirect()->back()->withErrors($validasi)->with(['error' => 'Gagal Import Data!']);
+        }
+
+        $file = fopen($request->file('file'), 'r');
+        $BarisPertama = true;
+        $MasukkanData = [];
+        $csvNim = [];
+        $csvNama = [];
+
+        while (($row = fgetcsv($file, 1000, ',')) !== false) {
+            if ($BarisPertama) {
+                $BarisPertama = false;
+
+                // Validasi Struktur Header
+                $header = ['nim', 'nama'];
+                $aktualheader = array_map('strtolower', array_map('trim', $row));
+
+                if ($aktualheader !== $header) {
+                    fclose($file);
+                    return back()->with(['error' => 'Format CSV Tidak Sesuai Template!']);
+                }
+                
+                continue;
+            }
+
+            $nim = trim($row[0] ?? '');
+            $nama = trim($row[1] ?? '');
+
+            // Skip Jika Kosong
+            if (empty($nim) || empty($nama)) continue;
+
+            // Cek duplikat dalam file CSV
+            if (in_array($nim, $csvNim) && in_array($nama, $csvNama)) {
+                return redirect()->back()->with(['error' => 'Didalam File Ada Data Yang Duplikat']);
+            }
+            if (in_array($nim, $csvNim)) {
+                return redirect()->back()->with(['error' => 'Didalam File Ada NIM Yang Duplikat']);
+            }
+            if (in_array($nama, $csvNama)) {
+                return redirect()->back()->with(['error' => 'Didalam File Ada Nama Yang Duplikat']);
+            }
+
+            // Cek Duplikat di dalam Database
+            $exists = DB::table('mahasiswa')
+                ->where('nim', $nim)
+                ->orWhere('nama', $nama)
+                ->exists();
+
+            if ($exists) {
+                return back()->with(['error' => 'Data $nip atau $nama Sudah Terdaftar']);
+            }
+
+            $csvNim[] = $nim;
+            $csvNama[] = $nama;
+
+            // Cek apakah nama Pengguna sudah ada di database
+            if (Dosen::where('nama_pengguna', $nim)->exists()) {
+                return back()->withErrors(['file' => 'Nama Pengguna Sudah Ada, Silahkan Coba Lagi'])->with(['error' => 'Gagal Menambahkan Data!']);
+            }
+
+            $MasukkanData[] = [
+                'foto' => null,
+                'nim' => $nim,
+                'nama' => $nama,
+                'kelas' => null,
+                'program_studi' => null,
+                'fakultas' => null,
+                'angkatan' => null,
+                'email' => null,
+                'no_hp' => null,
+                'nama_pengguna' => $nim,
+                'kata_sandi' => Hash::make($nim),
+                'role' => 'mahasiswa',
+                'wajib_ganti_kata_sandi' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        fclose($file);
+
+        if (empty($MasukkanData)) {
+            return back()->withErrors(['file' => 'File CSV Tidak Memiliki Data Mahasiswa'])->with(['error' => 'Data File CSV Kosong!']);
+        }
+
+        if (!empty($MasukkanData)) {
+            DB::table('mahasiswa')->insert($MasukkanData);
+        }
+
+        return redirect('admin/mahasiswa')->with(['success' => 'Data Mahasiswa Berhasil Diimport!']);
     }
 }

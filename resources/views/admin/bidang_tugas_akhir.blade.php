@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>InfoTA - Template Dokumen</title>
+    <title>Bidang Tugas Akhir - Brand</title>
     <link rel="stylesheet" href="{{ asset('/storage/assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
@@ -18,82 +18,33 @@
 <body id="page-top">
     <div id="wrapper">
         <nav class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark" style="background: #881d1d;">
-            <div class="container-fluid d-flex flex-column p-0">
-                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
-                    <div class="sidebar-brand-icon">
-                        <img class="img-fluid" src="{{ asset('/storage/assets/img/Logo/Logo%20White%20(1000%20x%201000%20piksel).png') }}" width="100px">
-                    </div>
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon"><img class="img-fluid" src="{{ asset('/storage/assets/img/Logo/Logo%20White%20(1000%20x%201000%20piksel).png') }}" width="100px"></div>
                 </a>
-
                 <hr class="sidebar-divider my-0">
-
-                <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/beranda">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/admin/template_dokumen">
-                            <i class="far fa-newspaper"></i>
-                            <span>Template Dokumen</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/bidang_tugas_akhir">
-                            <i class="fas fa-id-card-alt"></i>
-                            <span>Bidang Tugas Akhir</span>
-                        </a>
-                    </li>
-
+                <ul class="navbar-nav text-light" id="accordionSidebar-1">
+                    <li class="nav-item"><a class="nav-link" href="/admin/beranda"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/template_dokumen"><i class="far fa-newspaper"></i><span>Template Dokumen</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/admin/bidang_tugas_akhir"><i class="fas fa-id-card-alt"></i><span>Bidang Tugas Akhir</span></a></li>
                     <li class="nav-item dropdown">
-                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
-                            <i class="fas fa-users"></i>
-                            <span>Kelola Pengguna</span>
-                        </a>
+                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-users"></i><span>Kelola Pengguna</span></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/admin/dosen">
-                                <i class="fas fa-chalkboard-teacher"></i>&nbsp;Dosen
-                            </a>
-                            <a class="dropdown-item" href="/admin/mahasiswa">
-                                <i class="fas fa-user-graduate"></i>&nbsp;Mahasiswa
-                            </a>
+                            <a class="dropdown-item" href="/admin/dosen"><i class="fas fa-chalkboard-teacher"></i>&nbsp;Dosen</a>
+                            <a class="dropdown-item" href="/admin/mahasiswa"><i class="fas fa-user-graduate"></i>&nbsp;Mahasiswa</a>
                         </div>
                     </li>
-
                     <li class="nav-item">
-                        <hr>
-                        <a class="nav-link" href="/admin/profil">
-                            <i class="fas fa-user"></i>
-                            <span>Profil</span>
-                        </a>
+                        <hr><a class="nav-link" href="/admin/profil"><i class="fas fa-user"></i><span>Profil</span></a>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="/logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Keluar</span>
-                        </a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i><span>Keluar</span></a></li>
                 </ul>
-
-                <div class="text-center d-none d-md-inline">
-                    <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
-                </div>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle-1" type="button"></button></div>
             </div>
         </nav>
-
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <nav class="navbar navbar-expand bg-white shadow mb-4 topbar static-top navbar-light">
-                    <div class="container-fluid">
-                        <button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button">
-                            <i class="fas fa-bars"></i>
-                        </button>
-
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
                         <ul class="navbar-nav flex-nowrap ms-auto">
                             <li class="nav-item dropdown no-arrow mx-1">
                                 <div class="nav-item dropdown no-arrow">
@@ -185,38 +136,39 @@
                 </nav>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Template Dokumen</h3>
+                        <h3 class="text-dark mb-0">Bidang Tugas Akhir</h3>
                     </div>
                     <div class="card shadow">
                         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                            <p class="text-dark m-0 fw-bold">Data Dokumen</p>
-                            <button class="btn btn-sm link-light" type="button" style="background: #881d1d;" data-bs-toggle="modal" data-bs-target="#ModalTambahTemplate">
-                                <i class="fas fa-plus"></i>&nbsp;Tambah Template Dokumen
+                            <p class="text-dark m-0 fw-bold">Data Bidang</p>
+                            <button class="btn btn-sm link-light" type="button" style="background: #881d1d;" data-bs-toggle="modal" data-bs-target="#ModalTambahBidang">
+                                <i class="fas fa-plus"></i>&nbsp;Tambah Bidang
                             </button>
-                            <div class="modal fade" role="dialog" tabindex="-1" id="ModalTambahTemplate">
+                            <div class="modal fade" role="dialog" tabindex="-1" id="ModalTambahBidang">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
-                                        <form action="{{ route('template.tambah') }}" method="post" enctype="multipart/form-data">
+                                        <form action="{{ route('bidang.tambah') }}" method="post" enctype="multipart/form-data">
                                             @csrf
                                             <div class="modal-header">
-                                                <h5 class="modal-title text-dark" style="color: var(--bs-emphasis-color);font-weight: bold;">Tambah Template Dokumen</h5>
+                                                <h5 class="modal-title text-dark" style="color: var(--bs-emphasis-color);font-weight: bold;">Tambah Bidang</h5>
                                                 <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                             </div>
-                                            <div class="modal-body">
-                                                <label class="form-label text-dark" style="font-weight: bold;">File Template Dokumen :</label>
-                                                <input class="form-control form-control-sm @error('template_dokumen') is-invalid @enderror" type="file" name="template_dokumen" accept=".docx">
 
-                                                {{-- Pesan Error Untuk Template Dokumen --}}
-                                                @error('template_dokumen')
+                                            <div class="modal-body">
+                                                <label class="form-label text-dark" style="font-weight: bold;">Bidang :</label>
+                                                <input class="form-control form-control-sm @error('bidang') is-invalid @enderror" type="text" name="bidang" placeholder="Bidang Tugas Akhir...">
+                                                {{-- Pesan Error Untuk Bidang --}}
+                                                @error('bidang')
                                                     <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
                                                 @enderror
                                             </div>
+
                                             <div class="modal-footer">
                                                 <button class="btn btn-secondary btn-sm" type="reset">
                                                     <i class="fa fa-refresh"></i>&nbsp;Bersihkan
                                                 </button>
                                                 <button class="btn btn-sm link-light" type="submit" style="background: #881d1d;">
-                                                    <i class="fa fa-upload"></i>&nbsp;Unggah
+                                                    <i class="fas fa-save"></i>&nbsp;Simpan
                                                 </button>
                                             </div>
                                         </form>
@@ -230,42 +182,39 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">No</th>
-                                            <th class="text-center">File</th>
+                                            <th class="text-center">Bidang</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($menampilkanDataTemplateDokumen as $data)
-                                            <tr>
+                                        @foreach ($menampilkanDataBidang as $data)
+                                        <tr>
                                             <td class="text-center">{{ $loop->iteration }}</td>
-                                            <td class="text-center">{{ $data->template_dokumen }}</td>
+                                            <td class="text-center">{{ $data->bidang }}</td>
                                             <td>
                                                 <p class="text-center">
-                                                <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditTemplate{{ $data->id }}">
+                                                <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#ModalEditBidang{{ $data->id }}">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-danger btn-sm ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalHapusTemplate{{ $data->id }}">
+                                                <button class="btn btn-danger btn-sm ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalHapusBidang{{ $data->id }}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
-                                                <a href="{{ url('/download/' . $data->template_dokumen) }}" class="btn btn-info btn-sm tooltip-btn" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Unduh File Template Dokumen">
-                                                    <i class="fas fa-file-download"></i>
-                                                </a>
                                                 </p>
 
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditTemplate{{ $data->id }}">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalEditBidang{{ $data->id }}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
-                                                            <form method="post" action="{{ route('template.edit', $data->id) }}" enctype="multipart/form-data">
+                                                            <form action="{{ route('bidang.edit', $data->id) }}" method="post" enctype="multipart/form-data">
                                                                 @csrf
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" style="font-weight: bold;">Edit Template Dokumen</h5>
+                                                                    <h5 class="modal-title" style="font-weight: bold;">Edit Bidang</h5>
                                                                     <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <label class="form-label" style="font-weight: bold;">File Template Dokumen :</label>
-                                                                    <input class="form-control form-control-sm form-control @error('template_dokumen_'.$data->id) is-invalid @enderror" type="file" name="template_dokumen_{{ $data->id }}">
-                                                                    {{-- Pesan Error Untuk Template Dokumen --}}
-                                                                    @error('template_dokumen_'.$data->id)
+                                                                    <label class="form-label" style="font-weight: bold;">Bidang :</label>
+                                                                    <input class="form-control form-control-sm @error('bidang_'.$data->id) is-invalid @enderror" type="text" placeholder="Bidang Tugas Akhir..." name="bidang_{{$data->id}}" value="{{old('bidang', $data->bidang)}}">
+                                                                    {{-- Pesan Error Untuk Bidang --}}
+                                                                    @error('bidang_'.$data->id)
                                                                         <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>
                                                                     @enderror
                                                                 </div>
@@ -274,17 +223,18 @@
                                                                         <i class="fa fa-refresh"></i>&nbsp;Bersihkan
                                                                     </button>
                                                                     <button class="btn btn-warning btn-sm" type="submit" style="font-weight: bold;">
-                                                                        <i class="fa fa-save"></i>&nbsp;Simpan</button>
-                                                                    </div>
+                                                                        <i class="fa fa-save"></i>&nbsp;Perbarui
+                                                                    </button>
+                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalHapusTemplate{{ $data->id }}">
+                                                <div class="modal fade" role="dialog" tabindex="-1" id="ModalHapusBidang{{ $data->id }}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" style="font-weight: bold;">Hapus Template Dokumen</h5><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                                                                <h5 class="modal-title" style="font-weight: bold;">Hapus Bidang</h5><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body text-center">
                                                                 <h1 class="display-3"><i class="fas fa-exclamation-triangle"></i></h1>
@@ -294,7 +244,7 @@
                                                                 <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">
                                                                     <i class="fa fa-close"></i>&nbsp;Tidak
                                                                 </button>
-                                                                <a href="{{ route('template.hapus', $data->id) }}" class="btn btn-danger btn-sm">
+                                                                <a href="{{ route('bidang.hapus', $data->id) }}" class="btn btn-danger btn-sm" type="button">
                                                                     <i class="far fa-trash-alt"></i>&nbsp;Ya, Hapus
                                                                 </a>
                                                             </div>
@@ -302,13 +252,13 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            </tr>
+                                        </tr>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <td class="text-center"><strong>No</strong></td>
-                                            <td class="text-center"><strong>File</strong></td>
+                                            <td class="text-center"><strong>Bidang</strong></td>
                                             <td class="text-center"><strong>Aksi</strong></td>
                                         </tr>
                                     </tfoot>
@@ -389,5 +339,4 @@
         });
     </script>
 </body>
-
 </html>

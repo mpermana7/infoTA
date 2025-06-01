@@ -26,10 +26,21 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="/dosen/beranda"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/daftar_topik"><i class="far fa-file-alt"></i><span>Daftar Topik</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/dosen/daftar_topik_mandiri"><i class="far fa-file-alt"></i><span>Daftar Topik Mandiri</span></a></li>
                     <li class="nav-item"><a class="nav-link active" href="/dosen/template_laporan"><i class="fas fa-file-word"></i><span>Template Laporan</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/dokumen_cd"><i class="fas fa-file-word"></i><span>Dokumen Capstone Design</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/dosen/progres_ta"><i class="fas fa-chart-line"></i><span>Progres Tugas Akhir</span></a></li>
                     <li class="nav-item"><a class="nav-link disabled" href="/dosen/penilaian_mahasiswa"><i class="fas fa-pencil-alt"></i><span>Penilaian Mahasiswa</span></a></li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+                            <i class="fas fa-user-plus"></i><span>Pengajuan</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/dosen/pengajuan_topik">Pengajuan Topik</a>
+                            <a class="dropdown-item" href="/dosen/pengajuan_pembimbing">Pengajuan Pembimbing</a>
+                            <a class="dropdown-item" href="/dosen/pengajuan_bimbingan">Pengajuan Bimbingan</a>
+                        </div>
+                    </li>
                     <li class="nav-item">
                         <hr><a class="nav-link" href="/dosen/profil"><i class="fas fa-user"></i><span>Profil</span></a>
                     </li>
@@ -95,23 +106,29 @@
                                 <table class="table table-striped table-hover" id="tableData">
                                     <thead>
                                         <tr>
-                                            <th>No</th>
-                                            <th>File</th>
-                                            <th>Aksi</th>
+                                            <th class="text-center">No</th>
+                                            <th class="text-center">File</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($menampilkanDataTemplateDokumen as $data)
                                         <tr>
-                                            <td>1</td>
-                                            <td>CD1_template.docx</td>
-                                            <td><button class="btn btn-primary btn-sm" type="button"><i class="fas fa-download"></i></button></td>
+                                            <td class="text-center">{{ $loop->iteration }}</td>
+                                            <td class="text-center">{{ $data->template_dokumen }}</td>
+                                            <td>
+                                                <p class="text-center">
+                                                <a href="{{ url('/download/' . $data->template_dokumen) }}" class="btn btn-primary btn-sm" type="button"><i class="fas fa-download"></i></a>
+                                                </p>
+                                            </td>
                                         </tr>
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td><strong>No</strong></td>
-                                            <td><strong>File</strong></td>
-                                            <td><strong>Aksi</strong></td>
+                                            <td class="text-center"><strong>No</strong></td>
+                                            <td class="text-center"><strong>File</strong></td>
+                                            <td class="text-center"><strong>Aksi</strong></td>
                                         </tr>
                                     </tfoot>
                                 </table>

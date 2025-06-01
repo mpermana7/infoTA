@@ -41,6 +41,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/bidang_tugas_akhir">
+                            <i class="fas fa-id-card-alt"></i>
+                            <span>Bidang Tugas Akhir</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item dropdown">
                         <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                             <i class="fas fa-users"></i>Kelola Pengguna
@@ -183,7 +190,7 @@
                                     <div class="mb-3">
                                         <form action="{{ route('admin.editFoto', Auth::guard('admin')->user()->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
-                                        <input class="form-control-sm form-control @error('image') is-invalid @enderror" type="file" name="image" accept="image/*" required="">
+                                        <input class="form-control-sm form-control @error('image') is-invalid @enderror" type="file" name="image" accept="image/*">
                                         {{-- Pesan Error Untuk Image --}}
                                         @error('image')
                                             <small class="fw-bold" style="color: #881d1d;">{{ $message }}</small>

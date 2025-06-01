@@ -58,3 +58,21 @@
   margin-top: 8px;
 }
 
+.dropdown-item:hover {
+  color: #ffffff;
+  background-color: #881d1d;
+}
+
+.dropdown-item {
+  color: #000000;
+}
+
+.dropdown-item.active {
+  background-color: #881d1d;
+  color: #ffffff;
+}
+
+.form-select {
+  color: #000000;
+}
+

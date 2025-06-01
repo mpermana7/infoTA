@@ -37,6 +37,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/bidang_tugas_akhir">
+                            <i class="fas fa-id-card-alt"></i>
+                            <span>Bidang Tugas Akhir</span>
+                        </a>
+                    </li>
+
                     <li class="nav-item dropdown">
                         <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
                             <i class="fas fa-users"></i><span>Kelola Pengguna</span>

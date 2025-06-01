@@ -17,14 +17,16 @@ return new class extends Migration
             $table->bigInteger('nim')->unique();
             $table->string('nama');
             $table->string('kelas')->nullable();
-            $table->string('program_studi');
-            $table->string('fakultas');
-            $table->year('angkatan');
-            $table->string('email')->unique();
+            $table->string('program_studi')->nullable();
+            $table->string('fakultas')->nullable();
+            $table->year('angkatan')->nullable();
+            $table->string('email')->nullable()->unique();
             $table->string('no_hp')->nullable()->unique();
             $table->string('nama_pengguna')->unique();
             $table->string('kata_sandi');
             $table->string('role')->default('mahasiswa');
+            $table->integer('nilai')->nullable();
+            $table->integer('wajib_ganti_kata_sandi');
             $table->timestamps();
         });
     }
