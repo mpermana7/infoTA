@@ -9,5 +9,5 @@ class PengajuanTopik extends Model
 {
     use HasFactory;
     protected $table = 'pengajuan_topik';
-    protected $fillable = ['judul', 'nim', 'nama' ,'status'];
+    protected $fillable = ['judul', 'kode_dosen', 'dosen', 'nim', 'nama' ,'status'];
 }

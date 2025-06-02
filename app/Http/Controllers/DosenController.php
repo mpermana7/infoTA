@@ -206,7 +206,13 @@ class DosenController extends Controller
         $kode_dosen = auth()->guard('dosen')->user()->kode_dosen;
         $menampilkanDataDaftarTopik = DaftarTopik::where('kode_dosen', $kode_dosen)->get();
         $modalTopik = DaftarTopik::all();
-        return view('dosen.daftar_topik', compact('menampilkanDataDaftarTopik','modalTopik'));
+        $semua_anggota_kelompok = Kelompok::all();
+
+        return view('dosen.daftar_topik', [
+            'menampilkanDataDaftarTopik' => $menampilkanDataDaftarTopik,
+            'modalTopik' => $modalTopik,
+            'data_kelompok' => $semua_anggota_kelompok,
+        ]);
     }
 
     /**
@@ -284,16 +290,8 @@ class DosenController extends Controller
      */
     public function MenampilkanDataPengajuanTopik() : View {
         $kode_dosen = auth()->guard('dosen')->user()->kode_dosen;
-        $data_topik = DaftarTopik::where('kode_dosen', $kode_dosen)->first();
-
-        if(!empty($data_topik)) {
-        $judul = $data_topik->judul;
-        $menampilkanDataPengajuanTopik = PengajuanTopik::where('judul', $judul)->get();
+        $menampilkanDataPengajuanTopik = PengajuanTopik::where('kode_dosen', $kode_dosen)->get();
         return view('dosen.pengajuan_topik', compact('menampilkanDataPengajuanTopik')); 
-        }else{
-        $menampilkanDataPengajuanTopik = [];
-        return view('dosen.pengajuan_topik', compact('menampilkanDataPengajuanTopik'));
-        }
     }
 
     /**
@@ -306,10 +304,13 @@ class DosenController extends Controller
         $nim = $pengajuan_topik->nim;
         $nama = $pengajuan_topik->nama;
         $pembimbing_1 = auth()->guard('dosen')->user()->nama;
+        $get_kuota = DaftarTopik::where('judul', $judul)->first();
+        $kuota = $get_kuota->kuota;
 
-        // Update Status Pengajuan Topik
+
+        // Hapus Status Pengajuan Topik
         $pengajuan_topik->update([
-            'status' => 'Disetujui',
+            'status' => 'Disetujui'
         ]);
 
         // Input Data ke Kelompok
@@ -320,6 +321,15 @@ class DosenController extends Controller
             'pembimbing_satu' => $pembimbing_1,
         ]);
 
+        $jumlah_data_acc = PengajuanTopik::where('judul', $judul)->where('status', 'Disetujui')->count();
+
+        if ($jumlah_data_acc >= $kuota) {
+            PengajuanTopik::where('judul', $judul)->where('status', 'Menunggu Persetujuan')->delete();
+
+            $get_kuota->update([
+                'status' => 'Sudah Penuh',
+            ]);
+        }
         return redirect('/dosen/pengajuan_topik')->with(['success' => 'Pengajuan Berhasil Disetujui']);
     }
 
@@ -331,9 +341,7 @@ class DosenController extends Controller
         $pengajuan_topik = PengajuanTopik::where('id', $id)->first();
 
         // Update Status Pengajuan Topik
-        $pengajuan_topik->update([
-            'status' => 'Tidak Disetujui',
-        ]);
+        $pengajuan_topik->delete();
 
         return redirect('/dosen/pengajuan_topik')->with(['success' => 'Pengajuan Tidak Disetujui']);
     }
@@ -346,7 +354,7 @@ class DosenController extends Controller
         $menampilkanDataPengajuanPembimbing = PengajuanPembimbing::where('kode_dosen', $kode_dosen)->get();
         $get_pengajuan_pembimbing = PengajuanPembimbing::where('kode_dosen', $kode_dosen)->first();
         $judul = $get_pengajuan_pembimbing->judul;
-        $data_kelompok = Kelompok::where('judul', $judul)->get();
+        $data_kelompok = Kelompok::all();
 
         return view('/dosen/pengajuan_pembimbing', compact('menampilkanDataPengajuanPembimbing','data_kelompok'));
     }
@@ -358,15 +366,38 @@ class DosenController extends Controller
         //Get Data Pengajuan Pembimbing by ID
         $pengajuan_pembimbing = PengajuanPembimbing::where('id', $id)->first();
         $judul = $pengajuan_pembimbing->judul;
+        $posisi = $pengajuan_pembimbing->posisi;
 
         // Update Status Pengajuan Pembimbing
         $pengajuan_pembimbing->update([
             'status' => 'Disetujui',
         ]);
         $dosen = auth()->guard('dosen')->user()->nama;
+
+        if ($posisi == 'Pembimbing Satu') {
+        Kelompok::where('judul', $judul)->update([
+            'pembimbing_satu' => $dosen,
+        ]);
+        return redirect('/dosen/pengajuan_pembimbing')->with(['success' => 'Pengajuan Berhasil Disetujui']);
+        } else {
         Kelompok::where('judul', $judul)->update([
             'pembimbing_dua' => $dosen,
         ]);
         return redirect('/dosen/pengajuan_pembimbing')->with(['success' => 'Pengajuan Berhasil Disetujui']);
+        }
+    }
+
+    /**
+     * Reject Pengajuan Pembimbing
+     */
+    public function RejectDataPengajuanPembimbing($id) : RedirectResponse {
+        // Get Data Pengajuan Pembimbing by ID
+        $pengajuan_topik = PengajuanPembimbing::where('id', $id)->first();
+
+        // Update Status Pengajuan Topik
+        $pengajuan_topik->update([
+            'status' => 'Tidak Disetujui',
+        ]);
+        return redirect('/dosen/pengajuan_pembimbing')->with(['success' => 'Pengajuan Tidak Disetujui']);
     }
 }

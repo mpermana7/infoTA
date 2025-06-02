@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome5-overrides.min.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="{{ asset('/storage/assets/css/style.css') }}">
 </head>
 
 <body id="page-top">
@@ -54,7 +55,7 @@
                             <span>Kelola Pengguna</span>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/admin/dosen">
+                            <a class="dropdown-item active" href="/admin/dosen">
                                 <i class="fas fa-chalkboard-teacher"></i>&nbsp;Dosen
                             </a>
                             <a class="dropdown-item" href="/admin/mahasiswa">

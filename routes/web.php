@@ -134,6 +134,7 @@ Route::get('/dosen/pengajuan_topik/reject/{id}', [DosenController::class, 'Rejec
 
 Route::get('/dosen/pengajuan_pembimbing', [DosenController::class, 'MenampilkanDataPengajuanPembimbing'])->middleware('auth:dosen');
 Route::get('/dosen/pengajuan_pembimbing/acc/{id}', [DosenController::class, 'AccDataPengajuanPembimbing'])->name('pengajuan_pembimbing.acc')->middleware('auth:dosen');
+Route::get('/dosen/pengajuan_pembimbing/reject/{id}', [DosenController::class, 'RejectDataPengajuanPembimbing'])->name('pengajuan_pembimbing.reject')->middleware('auth:dosen');
 
 Route::post('/dosen/profil/editFoto/{id}', [DosenController::class, 'EditFotoDosen'])->name('dosen.editFoto')->middleware('auth:dosen');
 Route::post('/dosen/profil/editBiodata/{id}', [DosenController::class, 'EditBiodataDosen'])->name('dosen.editBiodata')->middleware('auth:dosen');
@@ -144,6 +145,7 @@ Route::post('/dosen/profil/gantiKataSandi/{id}', [DosenController::class, 'Ganti
 // Mahasiswa
 Route::get('/mahasiswa/beranda', [PageController::class, 'berandaMahasiswa'])->middleware('auth:mahasiswa');
 Route::get('/mahasiswa/daftar_topik', [PageController::class, 'daftarTopikMahasiswa'])->middleware('auth:mahasiswa');
+Route::get('/mahasiswa/daftar_topik_mandiri', [PageController::class, 'daftarTopikMandiriMahasiswa'])->middleware('auth:mahasiswa');
 Route::get('/mahasiswa/kelompok', [PageController::class, 'kelompokMahasiswa'])->middleware('auth:mahasiswa');
 
 
@@ -152,3 +154,6 @@ Route::get('/mahasiswa/daftar_topik', [MahasiswaController::class, 'MenampilkanD
 Route::get('/mahasiswa/kelompok', [MahasiswaController::class, 'dataMahasiswa'])->middleware('auth:mahasiswa');
 Route::get('/mahasiswa/pilih_topik/{id}', [MahasiswaController::class, 'PilihTopik'])->name('mahasiswa.pilihTopik')->middleware('auth:mahasiswa');
 Route::post('/mahasiswa/daftar_topik', [MahasiswaController::class, 'PilihPbb2'])->name('mahasiswa.pilihPbb2')->middleware('auth:mahasiswa');
+
+
+Route::get('/mahasiswa/daftar_topik_mandiri', [MahasiswaController::class, 'MenampilkanDataDaftarTopikMandiriMahasiswa'])->middleware('auth:mahasiswa');

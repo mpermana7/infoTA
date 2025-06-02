@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome-all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome5-overrides.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/storage/assets/css/style.css') }}">
 </head>
 
 <body id="page-top">

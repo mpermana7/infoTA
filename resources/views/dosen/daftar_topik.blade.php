@@ -150,7 +150,7 @@
 
                                                 <label class="form-label text-dark mt-3" style="font-weight: bold;">Program Studi :</label>
                                                 <select class="form-select form-select-sm @error('program_studi') is-invalid @enderror" name="program_studi" id="program_studiP">
-                                                    <option selected disabled>-- Pilih Program Studi --</option>
+                                                    <option value="">-- Pilih Program Studi --</option>
                                                 </select>
                                                 {{-- Pesan Error Untuk Program Studi--}}
                                                 @error('program_studi')
@@ -254,8 +254,8 @@
                                             <td class="text-center">
                                                 @if ($data->status == "Tersedia")
                                                     <span class="badge rounded-pill bg-success">Tersedia</span>
-                                                @elseif ($data->status == "Sudah Diambil")
-                                                    <span class="badge rounded-pill bg-danger">Sudah Diambil</span>
+                                                @elseif ($data->status == "Sudah Penuh")
+                                                    <span class="badge rounded-pill bg-danger">Sudah Penuh</span>
                                                 @endif
                                             </td>
 
@@ -459,17 +459,14 @@
                                                                     <div class="col-4"><span style="font-weight: bold;">Kelompok</span></div>
                                                                     <div class="col-8">
                                                                         <p><span class="fw-bold">:&nbsp;</span>
-                                                                            @php
-                                                                                $kelompokList = $data->kelompok;
-                                                                            @endphp
-                                                                            @if ($kelompokList)
-                                                                                @foreach ($kelompokList as $kelompok)
-                                                                                    <span class="badge bg-dark me-1">{{$kelompok}}</span>
-                                                                                @endforeach
-                                                                            @endif
-                                                                            @if (is_null($kelompokList))
-                                                                                -
-                                                                            @endif
+                                                                @php
+                                                                    $kelompok_untuk_modal_ini = $data_kelompok->where('judul', $data->judul);
+                                                                @endphp
+                                                                @forelse ($kelompok_untuk_modal_ini as $kelompok)
+                                                                    <span class="badge rounded-pill bg-dark me-1 text-truncate w-75">{{$kelompok->nim}} - {{$kelompok->nama_anggota}}</span>
+                                                                @empty
+                                                                    -
+                                                                @endforelse
                                                                         </p>
                                                                     </div>
                                                                 </div>
@@ -640,7 +637,7 @@
             const programStudiSelectP = document.getElementById('program_studiP');
     
             // Kosongkan pilihan sebelumnya
-            programStudiSelectP.innerHTML = '<option selected>-- Pilih Program Studi --</option>';
+            programStudiSelectP.innerHTML = '<option value="">-- Pilih Program Studi --</option>';
     
             if (dataP[fakultasP]) {
                 dataP[fakultasP].forEach(function(prodi) {

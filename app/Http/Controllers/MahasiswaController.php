@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DaftarTopik;
+use App\Models\DaftarTopikMandiri;
 use App\Models\Dosen;
 use App\Models\Kelompok;
 use App\Models\Mahasiswa;
@@ -35,14 +36,15 @@ class MahasiswaController extends Controller
         $nim = auth()->guard('mahasiswa')->user()->nim;
         $pengajuan_topik = PengajuanTopik::where('nim', $nim)->first();
 
+        $data_kelompok = Kelompok::all();
+
         if(!empty($pengajuan_topik)) {
         $judul = $pengajuan_topik->judul;
         $data_topik = DaftarTopik::where('judul', $judul)->first();
-        $data_kelompok = Kelompok::where('judul', $judul)->get();
         $data_pembimbing_dua = PengajuanPembimbing::where('judul', $judul)->first();
         $dosen = $data_topik->dosen;
         $data_dosen_pbb2 = Dosen::where('nama', '!=', $dosen)->get(); 
-        return view('mahasiswa.daftar_topik', compact('menampilkanDataDaftarTopik', 'pengajuan_topik','data_topik','data_kelompok', 'data_pembimbing_dua', 'data_dosen_pbb2'));
+        return view('mahasiswa.daftar_topik', compact('menampilkanDataDaftarTopik', 'pengajuan_topik','data_topik','data_pembimbing_dua', 'data_dosen_pbb2', 'data_kelompok'));
         }
 
         return view('mahasiswa.daftar_topik', compact('menampilkanDataDaftarTopik'));
@@ -55,6 +57,8 @@ class MahasiswaController extends Controller
         // Get Topik by ID
         $data_topik = DaftarTopik::find($id);
         $judul = $data_topik->judul;
+        $kode_dosen = $data_topik->kode_dosen;
+        $dosen = $data_topik->dosen;
         $nim = auth()->guard('mahasiswa')->user()->nim;
         $nama = auth()->guard('mahasiswa')->user()->nama;
         $status = 'Menunggu Persetujuan';
@@ -62,6 +66,8 @@ class MahasiswaController extends Controller
         // Simpan Data ke Pengajuan Topik
         PengajuanTopik::create([
             'judul' => $judul,
+            'kode_dosen' => $kode_dosen,
+            'dosen' => $dosen,
             'nim' => $nim,
             'nama' => $nama,
             'status' => $status,
@@ -106,5 +112,16 @@ class MahasiswaController extends Controller
         ]);
 
         return redirect('mahasiswa/daftar_topik')->with(['success' => 'Berhasil Pilih Pembimbing Dua']);
+    }
+
+    /**
+     * Menampilkan Data Daftar Topik Mandiri
+     */
+    public function MenampilkanDataDaftarTopikMandiriMahasiswa() : View {
+        $nim = auth()->guard('mahasiswa')->user()->nim;
+        $menampilkanDataDaftarTopikMandiriMahasiswa = DaftarTopikMandiri::where('nim', $nim)->get();
+        $modalTopik = DaftarTopik::all();
+
+        return view('mahasiswa.daftar_topik_mandiri', compact('modalTopik', 'menampilkanDataDaftarTopikMandiriMahasiswa'));
     }
 }

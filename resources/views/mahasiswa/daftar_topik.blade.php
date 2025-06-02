@@ -97,7 +97,7 @@
                                             <h5 class="modal-title text-dark" style="color: var(--bs-emphasis-color);font-weight: bold;">Daftar Topik Yang Dipilih</h5><button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body">
-                                            @if (!empty($pengajuan_topik))
+                                        @if (!empty($pengajuan_topik) && ($pengajuan_topik->status !== 'Tidak Disetujui'))
                                             <div class="row">
                                                 <div class="col-6"><span class="text-dark fw-bold">Judul</span></div>
                                                 <div class="col-6">
@@ -121,14 +121,14 @@
                                                 <div class="col-6">
                                                     <p class="text-dark">
                                                         <span class="text-dark fw-bold">:</span>&nbsp;
-                                                        @if (!empty($data_kelompok))
-                                                            @foreach ($data_kelompok as $kelompok)
-                                                                <span class="badge rounded-pill bg-dark me-1 text-truncate w-75">{{$kelompok->nim}} - {{$kelompok->nama_anggota}}</span>
-                                                            @endforeach
-                                                        @endif
-                                                        @if (empty($data_kelompok))
+                                                        @php
+                                                            $judul_kelompok = $data_kelompok->where('judul', $data_topik->judul);
+                                                        @endphp
+                                                        @forelse ($judul_kelompok as $kelompok)
+                                                            <span class="badge rounded-pill bg-dark me-1 text-truncate w-75">{{$kelompok->nim}} - {{$kelompok->nama_anggota}}</span>
+                                                        @empty
                                                             -
-                                                        @endif
+                                                        @endforelse
                                                     </p>
                                                 </div>
                                             </div>
@@ -229,9 +229,11 @@
                                                     </div>
                                                 @endif
                                             @endif
-                                            @else
+                                        @elseif (!empty($pengajuan_topik) && ($pengajuan_topik->status == 'Tidak Disetujui'))
                                                 <h4 class="text-center p-5"><b>Anda Belum Memilih Topik!</b></h4>
-                                            @endif
+                                        @elseif (empty($pengajuan_topik))
+                                                <h4 class="text-center p-5"><b>Anda Belum Memilih Topik!</b></h4>
+                                        @endif
                                         </div>
                                     </div>
                                 </div>
@@ -277,7 +279,7 @@
                                             </td>
                                             <td>
                                                 <p class="text-center">
-                                                @if (empty($pengajuan_topik->nim))
+                                                @if (empty($pengajuan_topik->nim) && ($data->status == 'Tersedia'))
                                                     <button class="btn btn-success btn-sm link-light ms-1 me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalPilihTopik{{ $data->id }}">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
@@ -384,14 +386,14 @@
                                                                     <div class="col-8">
                                                                         <p>
                                                                             <span class="fw-bold">:&nbsp;</span>
-                                                        @if (!empty($data_kelompok))
-                                                            @foreach ($data_kelompok as $kelompok)
-                                                                <span class="badge rounded-pill bg-dark me-1">{{$kelompok->nim}} - {{$kelompok->nama_anggota}}</span>
-                                                            @endforeach
-                                                        @endif
-                                                        @if (empty($data_kelompok))
+                                                        @php
+                                                            $judul_kelompok = $data_kelompok->where('judul', $data->judul);
+                                                        @endphp
+                                                        @forelse ($judul_kelompok as $kelompok)
+                                                            <span class="badge rounded-pill bg-dark me-1 text-truncate w-75">{{$kelompok->nim}} - {{$kelompok->nama_anggota}}</span>
+                                                        @empty
                                                             -
-                                                        @endif
+                                                        @endforelse
                                                                         </p>
                                                                     </div>
                                                                 </div>

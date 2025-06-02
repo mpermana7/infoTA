@@ -124,9 +124,14 @@
                                             <td class="text-center">{{$data->nim}}</td>
                                             <td class="text-center">{{$data->nama}}</td>
                                             <td class="text-center">
-                                                @foreach ($data_kelompok as $kelompok)
-                                                    <span class="badge rounded-pill bg-dark me-1">{{$kelompok->nim}} - {{ $kelompok->nama_anggota }}</span>
-                                                @endforeach
+                                                @php
+                                                    $kelompok_untuk_modal_ini = $data_kelompok->where('judul', $data->judul);
+                                                @endphp
+                                                @forelse ($kelompok_untuk_modal_ini as $kelompok)
+                                                    <span class="badge rounded-pill bg-dark me-1 text-truncate">{{$kelompok->nim}} - {{$kelompok->nama_anggota}}</span>
+                                                @empty
+                                                    -
+                                                @endforelse
                                             </td>
                                             <td class="text-center">
                                                 @if ($data->posisi == 'Pembimbing Satu')
@@ -145,6 +150,7 @@
                                                 @endif
                                             </td>
                                             <td>
+                                                @if ($data->status == 'Menunggu Persetujuan')
                                                 <p class="text-center">
                                                 <button class="btn btn-success btn-sm link-light me-1" type="button" data-bs-toggle="modal" data-bs-target="#ModalAccPembimbing{{$data->id}}">
                                                     <i class="fas fa-check"></i>
@@ -153,6 +159,9 @@
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                                 </p>
+                                                @else
+                                                    <span>-</span>
+                                                @endif
                                                 <div class="modal fade" role="dialog" tabindex="-1" id="ModalAccPembimbing{{$data->id}}">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
@@ -180,7 +189,14 @@
                                                                 <h6 class="display-1"><i class="fas fa-exclamation-triangle"></i></h6>
                                                                 <h6>Apakah Anda Yakin Ingin Menolaknya?</h6>
                                                             </div>
-                                                            <div class="modal-footer"><button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>&nbsp;Batalkan</button><button class="btn btn-sm" type="button" style="background: #881d1d;color: rgb(255,255,255);"><i class="fas fa-check"></i>&nbsp;Ya, Yakin</button></div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-secondary btn-sm" type="button" data-bs-dismiss="modal">
+                                                                    <i class="fas fa-times"></i>&nbsp;Batalkan
+                                                                </button>
+                                                                <a href="{{ route('pengajuan_pembimbing.reject', $data->id) }}" class="btn btn-sm" type="button" style="background: #881d1d;color: rgb(255,255,255);">
+                                                                    <i class="fas fa-check"></i>&nbsp;Ya, Yakin
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

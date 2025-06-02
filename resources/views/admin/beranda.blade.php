@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
     <link rel="stylesheet" href="{{ asset('/storage/assets/fonts/fontawesome-all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/storage/assets/css/style.css') }}">
 </head>
 
 <body id="page-top">

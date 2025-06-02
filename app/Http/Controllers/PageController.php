@@ -88,6 +88,9 @@ class PageController extends Controller
     public function daftarTopikMahasiswa() {
         return view('mahasiswa.daftar_topik');
     }
+    public function daftarTopikMandiriMahasiswa() {
+        return view('mahasiswa.daftar_topik_mandiri');
+    }
     public function kelompokMahasiswa() {
         return view('mahasiswa.kelompok');
     }
